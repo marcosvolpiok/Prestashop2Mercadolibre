@@ -1,5 +1,23 @@
 <?php
 
+/*
+to-do:
+-Mostrar iconito en product list
+-Evitar publicar los que ya están publicados
+-Cargar config desde config value
+-Cargar campo de stock
+
+-Overridear de forma prolija
+
+-----------
+-Equivalencias de: talles, colores y categorías
+-Cargar stock desde combinaciones
+-Crear pedidos en prestashop
+
+*/
+
+
+
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -148,7 +166,7 @@ class Mercadolibre2prestashop extends PaymentModule
 			*/
 
 			case 'login':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('Obtener credenciales', Mercadolibre2prestashop\Formulario::getLoginCredenciales($tabla));
+				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('Credenciales', Mercadolibre2prestashop\Formulario::getLoginCredenciales($tabla));
 				$prefijo = $this->getPrefijo('CONFIG_LOGIN_CREDENCIAL');
 				$prefijo = 'MERCADOLIBRE2PRESTASHOP';
 
