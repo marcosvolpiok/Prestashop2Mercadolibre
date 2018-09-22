@@ -38,6 +38,8 @@ class Mercadolibre2prestashop extends PaymentModule
 		  die(Tools::displayError('Primero debe desinstalar la version anterior del modulo.'));
 		}
 
+		$this->createConfigVariables();
+
 		// SQL -------------------------------
 		$sql = array(
 				//tabla para guardar informacion sobre las transacciones
@@ -98,8 +100,13 @@ class Mercadolibre2prestashop extends PaymentModule
 
     public function _postProcess()
     {    
-
-        //parent::postProcess();
+		if (Tools::isSubmit('btnSubmitLogin'))
+		{
+			Mercadolibre2prestashop\Formulario::postProcessFormularioConfigs(
+				$this->getPrefijo('PREFIJO_CONFIG'), 
+				Mercadolibre2prestashop\Formulario::getFormInputsNames( Mercadolibre2prestashop\Formulario::getLoginCredenciales(null) ) 
+			);
+		} 
     }		
 
 	/**
@@ -143,6 +150,8 @@ class Mercadolibre2prestashop extends PaymentModule
 			case 'login':
 				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('Obtener credenciales', Mercadolibre2prestashop\Formulario::getLoginCredenciales($tabla));
 				$prefijo = $this->getPrefijo('CONFIG_LOGIN_CREDENCIAL');
+				$prefijo = 'MERCADOLIBRE2PRESTASHOP';
+
 				break;
 /*
 			case 'test':
@@ -182,6 +191,9 @@ class Mercadolibre2prestashop extends PaymentModule
 
 		//obtiene el authorization code desde el json guardado
 		//$fields_value=$this->getAuthorizationKeyFromJSON($fields_value, $tabla);
+
+		//print_r($fields_value);
+		//die;
 
 		return $this->getHelperForm($tabla,$fields_value)->generateForm(array($form_fields));
 	}
@@ -233,8 +245,8 @@ class Mercadolibre2prestashop extends PaymentModule
 
 	public function getPrefijo($nombre)
 	{
-		$prefijo = 'TODOPAGO';
-		$variables = parse_ini_file('config.ini');
+		$prefijo = 'MERCADOLIBRE2PRESTASHOP';
+		//$variables = parse_ini_file('config.ini');
 		
 		if ( strcasecmp($nombre, 'PREFIJO_CONFIG') == 0)
 			return $prefijo;
@@ -246,6 +258,19 @@ class Mercadolibre2prestashop extends PaymentModule
 		return '';
 	}
 	
+	/**
+	 * Crea las variables de configuracion, asi se encuentran todas juntas en la base de datos
+	 */
+	public function createConfigVariables()
+	{
+		$prefijo = 'MERCADOLIBRE2PRESTASHOP';
+		//$variables = parse_ini_file('config.ini');
+		
+		foreach ( Mercadolibre2prestashop\Formulario::getFormInputsNames( Mercadolibre2prestashop\Formulario::getLoginCredenciales() ) as $nombre)
+		{
+			Configuration::updateValue($prefijo.'_'.strtoupper( $nombre ));
+		}
+	}	
 
 
 }
