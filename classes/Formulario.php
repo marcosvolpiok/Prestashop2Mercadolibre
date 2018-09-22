@@ -50,14 +50,34 @@ class Formulario {
 							'name' =>  'secretKey',
 							'required' => true
 					),
-					/*
-					array(
-		                    'type' => 'html',
-		                    'name' => 'html_data',
-		                    'html_content' => '<div class="loader"><img class="loader-image" src="'._PS_BASE_URL_.__PS_BASE_URI__.'/modules/todopago/imagenes/loader.gif" alt="loading.."></div>
-		                    <div id="error_message"></div>'
-				    )	
-				    */		
+				array(
+						'type' => 'select',
+						'label' =>'País',
+						'name' =>  'pais',
+						'desc' => 'Seleccione el país con el cual opera con MercadoLibre',
+						'required' => false,
+						'options' => array(
+								'query' => array(
+									array("id_option" => null,  "name" => "Seleccione su país"),
+									array("id_option" => "MLA",  "name" => "Argentina"),
+									array("id_option" => "MLB",  "name" => "Brasil"),
+									array("id_option" => "MCO",  "name" => "Colombia"),
+									array("id_option" => "MCR",  "name" => "Costa Rica"),
+									array("id_option" => "MEC",  "name" => "Ecuador"),
+									array("id_option" => "MLC",  "name" => "Chile"),
+									array("id_option" => "MLM",  "name" => "Mexico"),
+									array("id_option" => "MLU",  "name" => "Uruguay"),
+									array("id_option" => "MLV",  "name" => "Venezuela"),
+									array("id_option" => "MPA",  "name" => "Panama"),
+									array("id_option" => "MPE",  "name" => "Peru"),
+									array("id_option" => "MPT",  "name" => "Portugal"),
+									array("id_option" => "MRD",  "name" => "Dominicana"),
+								),
+								'id' => 'id_option',
+								'name' => 'name'
+						),
+						'required' => true
+				),
 		);
 	}
 
