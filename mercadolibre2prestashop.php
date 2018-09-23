@@ -2,7 +2,7 @@
 
 /*
 to-do:
--Mostrar iconito en product list
+-guardar id de publicacion de ML, cuando se crea el producto
 -Evitar publicar los que ya están publicados
 -Cargar config desde config value
 -Cargar campo de stock
@@ -61,7 +61,7 @@ class Mercadolibre2prestashop extends PaymentModule
 		// SQL -------------------------------
 		$sql = array(
 				//tabla para guardar informacion sobre las transacciones
-				'CREATE TABLE `'._DB_PREFIX_.'ml2presta` (
+				'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ml2presta` (
 				  `id_ml2presta` int(11) NOT NULL,
 				  `id_product` int(11) NOT NULL,
 				  `id_ml` int(11) NOT NULL
@@ -75,9 +75,14 @@ class Mercadolibre2prestashop extends PaymentModule
 				MODIFY `id_ml2presta` int(11) NOT NULL AUTO_INCREMENT'
 		);
 
-		foreach ($sql as $query)
-			if (Db::getInstance()->execute($query) == false)
+		foreach ($sql as $query){
+			try{
+				Db::getInstance()->execute($query);
+			} catch (Exception $e) {
+				echo 'Excepción capturada: ',  $e->getMessage(), "\n";
 				return false;		
+			}
+		}
 		// /SQL -------------------------------
 						
 		return parent::install() &&
@@ -286,8 +291,14 @@ class Mercadolibre2prestashop extends PaymentModule
 		
 		foreach ( Mercadolibre2prestashop\Formulario::getFormInputsNames( Mercadolibre2prestashop\Formulario::getLoginCredenciales() ) as $nombre)
 		{
-			Configuration::updateValue($prefijo.'_'.strtoupper( $nombre ));
+			print_r($nombre);
+			
+
+			Configuration::updateValue($prefijo.'_'.strtoupper( $nombre ), null);
 		}
+
+
+		//die;
 	}	
 
 

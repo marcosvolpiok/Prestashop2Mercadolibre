@@ -34,7 +34,7 @@ class Formulario {
 	/**
 	 * @return un array con los campos del formulario
 	 */
-	public static function getLoginCredenciales($tabla)
+	public static function getLoginCredenciales($tabla=null)
 	{	
 
 		return  array(
