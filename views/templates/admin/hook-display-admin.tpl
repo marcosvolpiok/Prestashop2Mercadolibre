@@ -1,23 +1,25 @@
 <div>
-	<input name="ps2ml" type="submit" value="Publicar en MercadoLibre" />
+	<input class="btn btn-default" name="ps2ml" type="submit" value="Publicar en MercadoLibre" />
 </div>
 
 
-
-
-<div id="mercadolibre_container">
-	<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1">
+<input type="hidden" name="mercadolibre_category" id="mercadolibre_category">
+<div id="mercadolibre_container" style="display: inline">
+	<label style="display: inline" for="mercadolibre_id_categ">Asignar categoría:</label>
+		<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1" style="width: 30%; display: inline">
 	</select>
 </div>
 
-<div id="mercadolibre_container2" style="display: none">
-	<input type="submit" name="mercadolibreCategoria" value="Asignar categoría">
+<div id="mercadolibre_container2" style="display: inline">
+	<input class="btn btn-default" type="submit" name="mercadolibreCategoria" value="Asignar categoría" style="display: inline">
 </div>
 
+
 <script>
+	$("#mercadolibre_container2").hide();
+
 	var ultimoSeleccionado;
 
-	
 	$.get( "https://api.mercadolibre.com/sites/MLA/categories", function( data ) { //Crea categorías padres
 	  $( ".result" ).html( data );
 	 // alert(data);
@@ -80,7 +82,7 @@
 
 			//Muestra hijos
 			if(data.children_categories.length>0){
-		    	var select = $("<select id='"+id_padre+"' onchange='buscar_hijos(this.value, " + data_orden_actual + ")' data-orden='" + data_orden_actual + "'></select>");
+		    	var select = $("<select id='"+id_padre+"' onchange='buscar_hijos(this.value, " + data_orden_actual + ")' data-orden='" + data_orden_actual + "' style='width: 30%; display: inline'></select>");
 		    	$("#mercadolibre_container").append( select );
 			    $("#"+id_padre)
 			    .append('<option value="">Selecciona categoría</option>');
@@ -95,6 +97,8 @@
 				ultimoSeleccionado = data_orden_actual;
 			}else{
 				$("#mercadolibre_container2").show();
+				$("#mercadolibre_category").val(id_padre);
+				
 			}
 					 
 		});

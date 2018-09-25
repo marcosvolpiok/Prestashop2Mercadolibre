@@ -82,7 +82,8 @@ class Mercadolibre2prestashop extends Module
 				'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ml2presta` (
 				  `id_ml2presta` int(11) NOT NULL,
 				  `id_product` int(11) NOT NULL,
-				  `id_ml` VARCHAR(13) NOT NULL
+				  `id_ml` VARCHAR(13) NOT NULL,
+				  `id_ml_category` VARCHAR(13) NOT NULL
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8',
 
 				'ALTER TABLE `'._DB_PREFIX_.'ml2presta`

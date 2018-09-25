@@ -12,7 +12,9 @@ class ml2presta extends ObjectModel{
 			'fields' => array(
 					'id_ml2presta' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 					'id_product' => array('type' => self::TYPE_INT, 'required' => true, 'validate' => 'isUnsignedId'),
-					'id_ml' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 13),
+					'id_ml' => array('type' => self::TYPE_STRING, 'size' => 13),
+					'id_ml_category' => array('type' => self::TYPE_STRING, 'size' => 13),
+
 			)
 	);
 
@@ -27,4 +29,16 @@ class ml2presta extends ObjectModel{
 		//die;
 		return $res[0]["id_ml"];
 	}
+
+	//Si existe el registro, devuelve el ID, sino devuelve false
+	public function exists_idproduct($id_product){
+		$query="SELECT id_ml2presta
+		FROM ". _DB_PREFIX_ . "ml2presta
+		WHERE id_product = " . $id_product;
+		$res=Db::getInstance()->executeS($query);
+		
+		//print_r($res);
+		//die;
+		return $res[0]["id_ml2presta"];
+	}	
 }
