@@ -10,8 +10,9 @@
 	</select>
 </div>
 
-<div id="mercadolibre_container2"></div>
-
+<div id="mercadolibre_container2" style="display: none">
+	<input type="submit" name="mercadolibreCategoria" value="Asignar categoría">
+</div>
 
 <script>
 	var ultimoSeleccionado;
@@ -63,6 +64,7 @@
 					console.log('Elimino: ' + i);
 					$('*[data-orden="'+ i +'"]').remove();
 				}
+				$("#mercadolibre_container2").hide();
 
 				buscar_hijos(id_padre, data_orden, false);
 				return true;				
@@ -78,7 +80,7 @@
 
 			//Muestra hijos
 			if(data.children_categories.length>0){
-		    	var select = $("<select id='"+id_padre+"' onchange='buscar_hijos(this.value, " + data_orden_actual + ")' data-orden='" + data_orden_actual + "'></select>"+data_orden_actual+"<br /><br /><br />");
+		    	var select = $("<select id='"+id_padre+"' onchange='buscar_hijos(this.value, " + data_orden_actual + ")' data-orden='" + data_orden_actual + "'></select>");
 		    	$("#mercadolibre_container").append( select );
 			    $("#"+id_padre)
 			    .append('<option value="">Selecciona categoría</option>');
@@ -92,7 +94,7 @@
 
 				ultimoSeleccionado = data_orden_actual;
 			}else{
-				$("#mercadolibre_container2").html("Continuar");
+				$("#mercadolibre_container2").show();
 			}
 					 
 		});
