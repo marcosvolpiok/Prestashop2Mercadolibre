@@ -4,6 +4,7 @@ class ml2presta extends ObjectModel{
 	public $id_ml2presta;
 	public $id_product;
 	public $id_ml;
+	public $id_ml_category;
 
 	public static $definition = array(
 			'table' => 'ml2presta',
@@ -20,7 +21,7 @@ class ml2presta extends ObjectModel{
 
 
 	public function get_Mlid_By_Idproduct($id_product){
-		$query="SELECT COUNT(id_ml) AS Q, id_ml
+		$query="SELECT COUNT(id_ml) AS Q, id_ml, id_ml2presta
 		FROM ". _DB_PREFIX_ . "ml2presta
 		WHERE id_product = " . $id_product;
 		$res=Db::getInstance()->executeS($query);
