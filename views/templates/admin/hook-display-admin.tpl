@@ -6,7 +6,7 @@
 
 
 <div id="mercadolibre_container">
-	<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1" data-seleccionado="">
+	<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1">
 	</select>
 </div>
 
@@ -61,6 +61,7 @@
 
 				for(var i=sig; i <= ultimoSeleccionado; i++){
 					console.log('Elimino: ' + i);
+					$('*[data-orden="'+ i +'"]').remove();
 				}
 
 				buscar_hijos(id_padre, data_orden, false);
@@ -77,7 +78,7 @@
 
 			//Muestra hijos
 			if(data.children_categories.length>0){
-		    	var select = $("<select id='"+id_padre+"' onchange='buscar_hijos(this.value, " + data_orden_actual + ")' data-orden='" + data_orden_actual + "' data-seleccionado=''></select>"+data_orden_actual+"<br /><br /><br />");
+		    	var select = $("<select id='"+id_padre+"' onchange='buscar_hijos(this.value, " + data_orden_actual + ")' data-orden='" + data_orden_actual + "'></select>"+data_orden_actual+"<br /><br /><br />");
 		    	$("#mercadolibre_container").append( select );
 			    $("#"+id_padre)
 			    .append('<option value="">Selecciona categoría</option>');
