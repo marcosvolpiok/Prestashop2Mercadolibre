@@ -103,7 +103,22 @@ class Mercadolibre2prestashop extends Module
 			}
 		}
 		// /SQL -------------------------------
-						
+		
+		
+		// Sobreescitura
+		if(!file_Exists("/var/www/html/prestashop1.6.1.20/override/controllers/admin/AdminProductsController.php")){
+			mkdir("/var/www/html/prestashop1.6.1.20/override/controllers");
+			mkdir("/var/www/html/prestashop1.6.1.20/override/controllers/admin");
+
+			$arch=fopen("/var/www/html/prestashop1.6.1.20/override/controllers/admin/AdminProductsController.php", "w");
+			fputs($arch, file_get_contents("/var/www/html/prestashop1.6.1.20/modules/mercadolibre2prestashop/override/controllers/admin/AdminProductsController.php"));
+			fclose($arch);
+
+		}
+
+		// /Sobreesctitura
+
+
 		return parent::install() &&
 					$this->registerHook('displayAdminListAfter');
 	}
