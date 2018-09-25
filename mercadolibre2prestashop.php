@@ -25,7 +25,7 @@ require_once (dirname(__FILE__) . '/classes/Formulario.php');
 
 
 
-class Mercadolibre2prestashop extends PaymentModule
+class Mercadolibre2prestashop extends Module
 {
 
 
@@ -39,6 +39,10 @@ class Mercadolibre2prestashop extends PaymentModule
 		$this->version = '1';
 		$this->author = 'Fullcart';
 		$this->bootstrap = true;
+
+        $this->autoload_class();
+
+
 		parent::__construct();
 		
 		//lo que se muestra en el listado de modulos en el backoffice
@@ -46,6 +50,20 @@ class Mercadolibre2prestashop extends PaymentModule
 		$this->description = $this->l('Mercadolibre integración');//descripcion
 		$this->confirmUninstall = $this->l('Realmente quiere desinstalar este modulo?');//mensaje que aparece al momento de desinstalar el modulo
 	}
+
+    public function autoload_class($dir = 'classes')
+    {
+        if ($files = Tools::scandir(_PS_MODULE_DIR_.$this->name, 'php', $dir))
+        {
+            foreach($files as $file)
+            {
+                if(strpos($file,'index.php')==false) 
+                {
+                    require_once $file;
+                }                
+            }                        
+        }
+    }
 
 
 	public function install()
@@ -64,7 +82,7 @@ class Mercadolibre2prestashop extends PaymentModule
 				'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'ml2presta` (
 				  `id_ml2presta` int(11) NOT NULL,
 				  `id_product` int(11) NOT NULL,
-				  `id_ml` int(11) NOT NULL
+				  `id_ml` VARCHAR(13) NOT NULL
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8',
 
 				'ALTER TABLE `'._DB_PREFIX_.'ml2presta`
