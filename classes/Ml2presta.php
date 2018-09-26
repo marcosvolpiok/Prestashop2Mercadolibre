@@ -51,8 +51,9 @@ class ml2presta extends ObjectModel{
 		$res=Db::getInstance()->executeS($query);
 		
 		//print_r($res);
+		//echo "jjjj " .  $res[0]["id_ml_category"] . "jjj";
 		//die;
 		return $res[0]["id_ml_category"];
-
+		//return $res;
 	}
 }

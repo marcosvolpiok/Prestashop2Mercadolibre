@@ -129,6 +129,13 @@ class AdminProductsController extends AdminProductsControllerCore
             			}
 
 
+
+            			if(empty(Ml2presta::get_category_by_idproduct($itemId))){
+            				echo "Producto ID $itemId no tiene categoría. Por favor asígnale una para poder publicarlo";
+            				continue;
+            			}
+
+
 					    //echo '<pre>';
 					    try{
 					    	$meliResp=$meli->post('/items', $arrItem, array('access_token' => $_SESSION['access_token']));
@@ -153,9 +160,6 @@ class AdminProductsController extends AdminProductsControllerCore
 
 					    if($itemExists=Ml2presta::exists_idproduct($itemId)){
 					    	$ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
-					    	
-					    	
-						    //$ml2presta->id_ml_category='fdfdsfdsfds';
 						    $ml2presta->id_ml=$meliResp["body"]->id;
 						    $ml2presta->update();
 					    }else{
