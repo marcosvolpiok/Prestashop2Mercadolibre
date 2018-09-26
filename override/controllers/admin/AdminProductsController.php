@@ -28,7 +28,6 @@
 if (!defined('_PS_VERSION_'))
     exit;
 session_start();
-//Configuration::get($prefijo.'_ID_SITE')
 
 $domain = $_SERVER['HTTP_HOST'];
 $appName = explode('.', $domain)[0];
@@ -56,11 +55,10 @@ class AdminProductsController extends AdminProductsControllerCore
 
 
     public function postProcess()
-    {    
-    	include("/var/www/html/prestashop1.6.1.20/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php");
-    	include("/var/www/html/prestashop1.6.1.20/modules/mercadolibre2prestashop/classes/Ml2presta.php");
-
-    	//include("/var/www/html/prestashop1.6.1.20/modules/mercadolibre2prestashop/vendor/php-sdk/configApp.php");
+    {   
+    	require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php');
+		require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
+ 
     	$prefijo="MERCADOLIBRE2PRESTASHOP";
     	$appId = trim(Configuration::get($prefijo.'_APPID'));
 		$secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
@@ -70,7 +68,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         if(!empty(Tools::getValue('ps2ml'))){ //Autentica
 			if(empty($appId) OR empty($secretKey) OR empty($siteId)){
-				echo "Por favor revisa la configuración del módulo. Tienes que completar toda la configuración";
+				echo "Por favor revisa la configuración del módulo mercadolibre2prestashop. Tienes que completar toda la configuración";
 				die;
 			}
 			        	
@@ -103,9 +101,9 @@ class AdminProductsController extends AdminProductsControllerCore
 	                }
 	            }
 	        } else {
-	        	echo $redirectURI . " ---- ";
-	        	echo "(((((".Meli::$AUTH_URL[$siteId];
-                echo '<p><a alt="Login using MercadoLibre oAuth 2.0" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">Authenticate</a></p>';
+	        	//echo $redirectURI . " ---- ";
+	        	//echo "(((((".Meli::$AUTH_URL[$siteId];
+                echo '<p><a alt="Login using MercadoLibre oAuth 2.0" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">Loguearse con Mercado Libre</a></p>';
             }
         
 
@@ -131,7 +129,7 @@ class AdminProductsController extends AdminProductsControllerCore
             			}
 
 
-					    echo '<pre>';
+					    //echo '<pre>';
 					    try{
 					    	$meliResp=$meli->post('/items', $arrItem, array('access_token' => $_SESSION['access_token']));
 						} catch (Exception $e) {
@@ -147,10 +145,9 @@ class AdminProductsController extends AdminProductsControllerCore
 	                    	continue;
 	                    }
 
-					    print_r($meliResp);
-					    echo '</pre>';
-
-					    echo "-".$meliResp["body"]->id.".";
+					    //print_r($meliResp);
+					    //echo '</pre>';
+					    //echo "-".$meliResp["body"]->id.".";
 
 
 
@@ -176,16 +173,13 @@ class AdminProductsController extends AdminProductsControllerCore
 			    		die('xxx');
 
 			}elseif(!empty(Tools::getValue('mercadolibreCategoria'))){ //Asigna categoría
-				echo "asigna categoría";
+				echo "Asignando categoría...";
 				//Busca ml2presta
           		//$ml2presta = new Ml2presta();
             	$item = Tools::getValue('productBox');
             	$category = Tools::getValue('mercadolibre_category');
 
             	foreach($item as $itemId){
-					
-					 
-
 	            	if($itemExists=Ml2presta::exists_idproduct($itemId)){ //Ya existe en DB
 	            		$ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
 	            		$ml2presta->id_ml_category=$category;
@@ -196,8 +190,6 @@ class AdminProductsController extends AdminProductsControllerCore
 	            		$ml2presta->id_ml_category=$category;
 	            		$ml2presta->add();
 	            	}
-					//Si existe, updatea
-					//Sino, inserta
             	}
 				die;
 			}
@@ -217,14 +209,6 @@ class AdminProductsController extends AdminProductsControllerCore
 
     // Revisa si los datos del proudcto son aptos para al API de Mercado Libre
     public function validar_producto($arrProducto){
-    	/* debe tener:
-    			-precio //vacío
-    			-Stock  //vacío
-    			-Nombre --- Validar máximo de caracteres. CORTAR hasta la cantidad permitida --- 60 characters long.
-    					-si tiene más de 60 cortar
-    					-si está vacío
-    			-descripción: IDEM
-		*/
     	if(strlen($arrProducto["description"]["plain_text"]) > 50000 ){ //max chars
     		$arrProducto["description"]["plain_text"] = substr($arrProducto["description"]["plain_text"], 0, 500009);
     		echo "adassad";	
@@ -246,11 +230,8 @@ class AdminProductsController extends AdminProductsControllerCore
 
     }
 
-    public function create_item_array($idProduct){
-			//foreach($productos as $p){
+    public function create_item_array($idProduct){				
 				$prod = new Product((int) $idProduct);
-//				print_r($prod);
-
 				$image = Image::getImages(1, $p);
 
 				foreach($image as $img){
@@ -262,13 +243,12 @@ class AdminProductsController extends AdminProductsControllerCore
 			                "source" => $imageUrl
 			            );
 				}
-				//print_r($prod);
 
 
 
 			    $item = array(
 			        "title" => $prod->name[1],
-			        "category_id" => "MLA416841",
+			        "category_id" => "MLA88488",
 			        "price" => str_replace(",", "", number_Format($prod->price, 2)),
 			        "currency_id" => "ARS",
 			        "available_quantity" => StockAvailable::getQuantityAvailableByProduct($idProduct),
@@ -282,10 +262,7 @@ class AdminProductsController extends AdminProductsControllerCore
 			        "warranty" => "12 month",
 			        "pictures" => $arrImageUrl
 			    );
-			    //print_r($item);
-			    //die;
 
 			    return $item;
-			//}
     }
 }

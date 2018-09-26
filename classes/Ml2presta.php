@@ -42,4 +42,17 @@ class ml2presta extends ObjectModel{
 		//die;
 		return $res[0]["id_ml2presta"];
 	}	
+
+	//Devuelve id de categoría con el id de prestashop
+	public function get_category_by_idproduct($id_product){
+		$query="SELECT id_ml_category
+		FROM ". _DB_PREFIX_ . "ml2presta
+		WHERE id_product = " . $id_product;
+		$res=Db::getInstance()->executeS($query);
+		
+		//print_r($res);
+		//die;
+		return $res[0]["id_ml_category"];
+
+	}
 }

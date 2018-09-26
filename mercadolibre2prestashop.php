@@ -1,23 +1,5 @@
 <?php
 
-/*
-to-do:
--guardar id de publicacion de ML, cuando se crea el producto
--Evitar publicar los que ya están publicados
--Cargar config desde config value
--Cargar campo de stock
-
--Overridear de forma prolija
-
------------
--Equivalencias de: talles, colores y categorías
--Cargar stock desde combinaciones
--Crear pedidos en prestashop
-
-*/
-
-
-
 if (!defined('_PS_VERSION_'))
 	exit;
 
@@ -106,12 +88,12 @@ class Mercadolibre2prestashop extends Module
 		
 		
 		// Sobreescitura
-		if(!file_Exists("/var/www/html/prestashop1.6.1.20/override/controllers/admin/AdminProductsController.php")){
-			mkdir("/var/www/html/prestashop1.6.1.20/override/controllers");
-			mkdir("/var/www/html/prestashop1.6.1.20/override/controllers/admin");
+		if(!file_Exists(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php")){
+			mkdir(_PS_ROOT_DIR_ . "/override/controllers");
+			mkdir(_PS_ROOT_DIR_ . "/override/controllers/admin");
 
-			$arch=fopen("/var/www/html/prestashop1.6.1.20/override/controllers/admin/AdminProductsController.php", "w");
-			fputs($arch, file_get_contents("/var/www/html/prestashop1.6.1.20/modules/mercadolibre2prestashop/override/controllers/admin/AdminProductsController.php"));
+			$arch=fopen(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php", "w");
+			fputs($arch, file_get_contents(dirname(__FILE__) . "/override/controllers/admin/AdminProductsController.php"));
 			fclose($arch);
 
 		}
@@ -147,7 +129,6 @@ class Mercadolibre2prestashop extends Module
 			'version'    	 	  => $this->version,
 			'url_base'			  => "//".Tools::getHttpHost(false).__PS_BASE_URI__,
 			'config_general' 	  => $this->renderConfigForms(),
-			//'config_mediosdepago' => $this->renderMediosdePagoForm(),
 		));
 		$output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');//recupero el template de configuracion
 		
@@ -197,60 +178,16 @@ class Mercadolibre2prestashop extends Module
 
 		switch ($tabla)
 		{
-			/*
-			case 'config':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('general ', Mercadolibre2prestashop\Formulario::getConfigFormInputs($this->getOptions($this->segmento), $this->getOptions($this->canal)));
-				$prefijo = $this->getPrefijo('PREFIJO_CONFIG');
-				break;
-			*/
-
 			case 'login':
 				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('Credenciales', Mercadolibre2prestashop\Formulario::getLoginCredenciales($tabla));
 				$prefijo = $this->getPrefijo('CONFIG_LOGIN_CREDENCIAL');
 				$prefijo = 'MERCADOLIBRE2PRESTASHOP';
 
-				break;
-/*
-			case 'test':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('ambiente developers', Mercadolibre2prestashop\Formulario::getAmbienteFormInputs($tabla));
-				$prefijo = $this->getPrefijo('CONFIG_TEST');
-				break;
-			
-			case 'produccion':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('ambiente '.$tabla, Mercadolibre2prestashop\Formulario::getAmbienteFormInputs($tabla));
-				$prefijo = $this->getPrefijo('CONFIG_PRODUCCION');
-				break;
-
-			case 'proxy':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('configuracion - proxy', Mercadolibre2prestashop\Formulario::getProxyFormInputs());
-				$prefijo = $this->getPrefijo('CONFIG_PROXY');
-				break;
-			
-			case 'estado':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('estados del pedido', Mercadolibre2prestashop\Formulario::getEstadosFormInputs($this->getOrderStateOptions()));
-				$prefijo = $this->getPrefijo('CONFIG_ESTADOS');
-				break;
-				
-			case 'servicio':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('configuracion - servicio', Mercadolibre2prestashop\Formulario::getServicioConfFormInputs());
-				$prefijo = $this->getPrefijo('PREFIJO_CONFIG');
-				break;
-				
-			case 'embebed':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('configuracion - formulario hibrido', Mercadolibre2prestashop\Formulario::getEmbebedFormInputs());
-				$prefijo = $this->getPrefijo('CONFIG_EMBEBED');
-				break;		
-				*/		
+				break;	
 		}
 
 		if (isset($prefijo))
 			$fields_value= Mercadolibre2prestashop\Formulario::getConfigs($prefijo, Mercadolibre2prestashop\Formulario::getFormInputsNames($form_fields['form']['input']));		
-
-		//obtiene el authorization code desde el json guardado
-		//$fields_value=$this->getAuthorizationKeyFromJSON($fields_value, $tabla);
-
-		//print_r($fields_value);
-		//die;
 
 		return $this->getHelperForm($tabla,$fields_value)->generateForm(array($form_fields));
 	}
@@ -303,7 +240,6 @@ class Mercadolibre2prestashop extends Module
 	public function getPrefijo($nombre)
 	{
 		$prefijo = 'MERCADOLIBRE2PRESTASHOP';
-		//$variables = parse_ini_file('config.ini');
 		
 		if ( strcasecmp($nombre, 'PREFIJO_CONFIG') == 0)
 			return $prefijo;
@@ -321,18 +257,12 @@ class Mercadolibre2prestashop extends Module
 	public function createConfigVariables()
 	{
 		$prefijo = 'MERCADOLIBRE2PRESTASHOP';
-		//$variables = parse_ini_file('config.ini');
 		
 		foreach ( Mercadolibre2prestashop\Formulario::getFormInputsNames( Mercadolibre2prestashop\Formulario::getLoginCredenciales() ) as $nombre)
 		{
-			print_r($nombre);
-			
-
+			//print_r($nombre);
 			Configuration::updateValue($prefijo.'_'.strtoupper( $nombre ), null);
 		}
-
-
-		//die;
 	}	
 
 
