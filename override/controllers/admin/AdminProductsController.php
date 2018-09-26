@@ -230,7 +230,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
     }
 
-    public function create_item_array($idProduct){				
+    public function create_item_array($idProduct){
 				$prod = new Product((int) $idProduct);
 				$image = Image::getImages(1, $p);
 
@@ -245,10 +245,10 @@ class AdminProductsController extends AdminProductsControllerCore
 				}
 
 
-
+				$producCategory=Ml2presta::get_category_by_idproduct($idProduct);
 			    $item = array(
 			        "title" => $prod->name[1],
-			        "category_id" => "MLA88488",
+			        "category_id" => $producCategory,
 			        "price" => str_replace(",", "", number_Format($prod->price, 2)),
 			        "currency_id" => "ARS",
 			        "available_quantity" => StockAvailable::getQuantityAvailableByProduct($idProduct),
