@@ -195,6 +195,9 @@ class AdminProductsController extends AdminProductsControllerCore
 	            		$ml2presta->add();
 	            	}
             	}
+            	array( "message"=>"Categoría cambiada exitosamente en ".count($item)." productos",
+            		"status"=>"200"
+            	);
 				die;
 			}
 

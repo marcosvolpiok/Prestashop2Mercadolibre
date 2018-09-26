@@ -1,55 +1,72 @@
+<div id="mercadolibre_result_success" class="bootstrap">
+	<div id="mercadolibre_result_success_text" class="alert alert-success">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+			
+	</div>
+</div>
+
+<div id="mercadolibre_result_error" class="bootstrap">
+	<div id="mercadolibre_result_error_text" class="alert alert-info">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+			
+	</div>
+</div>
+
+
 <div>
 	<input class="btn btn-default" name="ps2ml" type="submit" value="Publicar en MercadoLibre" />
 </div>
 
 
-<input type="hidden" name="mercadolibre_category" id="mercadolibre_category">
-<div id="mercadolibre_container" style="display: inline">
-	<label style="display: inline" for="mercadolibre_id_categ">Asignar categoría:</label>
-		<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1" style="width: 30%; display: inline">
-	</select>
-</div>
+<div style="display: inline; margin-left: 12.5%; height: 25%">
+	<input type="hidden" name="mercadolibre_category" id="mercadolibre_category">
+	<div id="mercadolibre_container" style="display: inline">
+		<label style="display: inline" for="mercadolibre_id_categ">Categoría </label>
+			<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1" style="width: 30%; display: inline">
+		</select>
+	</div>
 
-<div id="mercadolibre_container2" style="display: inline">
-	<input class="btn btn-default" type="submit" name="mercadolibreCategoria" value="Asignar categoría" style="display: inline">
+	<div id="mercadolibre_container2" style="display: inline">
+		<input class="btn btn-default" type="button" name="mercadolibreCategoria" value="Asignar categoría" style="display: inline" onclick="send_form_category()">
+	</div>
 </div>
-
 
 <script>
 	$("#mercadolibre_container2").hide();
-
+	$("#mercadolibre_result_success").hide();
+	$("#mercadolibre_result_error").hide();
 	var ultimoSeleccionado;
 
-	$.get( "https://api.mercadolibre.com/sites/MLA/categories", function( data ) { //Crea categorías padres
-	  $( ".result" ).html( data );
-	 // alert(data);
-	  //alert( "Load was performed." );
-	     $("#mercadolibre_id_categ")
-	    .append('<option value="">Selecciona categoría</option>');
-
-
-	  data.forEach(function(entry) {
-	   // console.log(entry);
-	    //console.log(entry.id);
-	    //console.log(entry.name);
-
-	    //$( ".result" ).html( data );
-
-	     $("#mercadolibre_id_categ")
-	    .append('<option value="'+entry.id+'">'+entry.name+'</option>');
-
-
-	  }, this);	  
-	});
-
 /*
-	function mercadolibre_add_categ(id){
-		console.log('++++++++ ' + id);
-    	var select = $("<select id='"+id+"' onchange='buscar_hijos('"+id+"')'></select>");
-    	$("#mercadolibre_container").html( $("#mercadolibre_container").html() + select);
-    	buscar_hijos(id);
-	}
-	*/
+	$.get( "https://api.mercadolibre.com/sites/MLA/categories", function( data ) { //Crea categorías padres
+		$( ".result" ).html( data );
+		$("#mercadolibre_id_categ").append('<option value="">Selecciona categoría</option>');
+
+		data.forEach(function(entry) {
+			$("#mercadolibre_id_categ").append('<option value="'+entry.id+'">'+entry.name+'</option>');
+		}, this);	  
+	});
+*/
+
+	$.ajax({
+		type: 'GET',
+		url: 'https://api.mercadolibre.com/sites/MLA/categories',
+		success: function(data){
+			$( ".result" ).html( data );
+			$("#mercadolibre_id_categ").append('<option value="">Selecciona categoría</option>');
+
+			data.forEach(function(entry) {
+				$("#mercadolibre_id_categ").append('<option value="'+entry.id+'">'+entry.name+'</option>');
+			}, this);	  
+		},
+
+		error: function(){
+			alert('Hubo un error al conectarse con Mercado Libre. Por favor reintentá en 15 minutos');
+			console.log('Error al conectar a Mercado Libre');
+		}
+	});		
+
+
 
 	function buscar_hijos(id_padre, data_orden, detectar_click_anterior=true){
 		var data_orden_actual = data_orden + 1;
@@ -104,8 +121,28 @@
 		});
 	}
 
-	//Clickea en categoría ya seleccionada anteriormente
-	function volver_atras(){
+	function send_form_category(){
+		console.log(window.location.href);
+		//form-product
+		$.ajax({
+		  type: 'POST',
+		  url: window.location.href+'&mercadolibreCategoria='+true,
+		  data: $("#form-product").serialize(),
+		  contentType: 'application/json',
+		  success: function(result){ 
+		  	var json = jQuery.parseJSON( result );
 
+		  	alert(result);
+		  	$("#mercadolibre_result_success").show();
+		  	$("#mercadolibre_result_success_text").append(json.message);
+		  },
+
+		  error: function(result){ 
+		  	//alert(result);
+		  	$("#mercadolibre_result_error").show();
+		  	$("#mercadolibre_result_error_text").append(result);
+		  }
+
+		});		
 	}
 </script>
