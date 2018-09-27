@@ -14,7 +14,9 @@
 
 
 <div>
-	<input class="btn btn-default" name="ps2ml" type="submit" value="Publicar en MercadoLibre" />
+	<input class="btn btn-default" name="ps2ml" type="submit" 
+	{* onclick="send_form_product()" *}
+	value="Publicar en MercadoLibre" />
 </div>
 
 
@@ -132,7 +134,7 @@
 		  success: function(result){ 
 		  	var json = jQuery.parseJSON( result );
 
-		  	alert(result);
+		  	//alert(result);
 		  	$("#mercadolibre_result_success").show();
 		  	$("#mercadolibre_result_success_text").append(json.message);
 		  },
@@ -144,5 +146,31 @@
 		  }
 
 		});		
+	}
+
+	function send_form_product(){
+		console.log(window.location.href);
+		//form-product
+		$.ajax({
+		  type: 'POST',
+		  url: window.location.href+'&ps2ml='+true,
+		  data: $("#form-product").serialize(),
+		  contentType: 'application/json',
+		  success: function(result){ 
+		  	var json = jQuery.parseJSON( result );
+
+		  	//alert(result);
+		  	$("#mercadolibre_result_success").show();
+		  	$("#mercadolibre_result_success_text").append(json.message);
+		  },
+
+		  error: function(result){ 
+		  	//alert(result);
+		  	$("#mercadolibre_result_error").show();
+		  	$("#mercadolibre_result_error_text").append(result);
+		  }
+
+		});		
+
 	}
 </script>

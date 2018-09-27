@@ -113,6 +113,61 @@ class Mercadolibre2prestashop extends Module
 
 	public function hookDisplayAdminListAfter()
 	{
+		// Autentificación API	
+    	require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php');
+		require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
+ 
+    	$prefijo="MERCADOLIBRE2PRESTASHOP";
+    	$appId = trim(Configuration::get($prefijo.'_APPID'));
+		$secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
+		$siteId = trim(Configuration::get($prefijo.'_PAIS'));
+
+		$link = new Link(); 
+		$arrAdminDir = explode("/", PS_ADMIN_DIR);
+		$redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ].'/'.$link->getAdminLink('AdminProducts', true).'&ps2ml=true&authFin=true';
+
+        $meli = new Meli($appId, $secretKey);
+        if($_GET['code'] || $_SESSION['access_token']) {
+	        // If code exist and session is empty
+	        if($_GET['code'] && !($_SESSION['access_token'])) {
+	            // If the code was in get parameter we authorize
+	            $user = $meli->authorize($_GET['code'], $redirectURI);
+
+	            // Now we create the sessions with the authenticated user
+	            $_SESSION['access_token'] = $user['body']->access_token;
+	            $_SESSION['expires_in'] = time() + $user['body']->expires_in;
+	            $_SESSION['refresh_token'] = $user['body']->refresh_token;
+	        } else {
+	            // We can check if the access token in invalid checking the time
+	            if($_SESSION['expires_in'] < time()) {
+		            try {
+		                // Make the refresh proccess
+		                $refresh = $meli->refreshAccessToken();
+
+		                // Now we create the sessions with the new parameters
+		                $_SESSION['access_token'] = $refresh['body']->access_token;
+		                $_SESSION['expires_in'] = time() + $refresh['body']->expires_in;
+		                $_SESSION['refresh_token'] = $refresh['body']->refresh_token;
+
+		                //echo "Redireccionar a esta misma URL";
+		                header("location: $redirectURI");
+		                die;
+		            } catch (Exception $e) {
+		                echo "Exception: ",  $e->getMessage(), "\n";
+		            }
+	            }
+	        }
+	    } else {
+            return '<p><a alt="Login using MercadoLibre oAuth 2.0" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">Loguearse con Mercado Libre</a></p>' . print_r($_SESSION, true);
+        }
+            /*
+        echo '<pre>';
+        print_r($_SESSION);
+        echo '</pre>';
+        die ('zzzzzzzzzzzzzz'); */
+
+        // /Autentificación API	
+
 		return $this->display(__FILE__, 'views/templates/admin/hook-display-admin.tpl');
 	}
 	
@@ -123,6 +178,11 @@ class Mercadolibre2prestashop extends Module
 	public function getContent()
 	{
 		$this->_postProcess();
+
+		//Autentificación api
+		$prefijo = 'MERCADOLIBRE2PRESTASHOP';
+		Configuration::updateValue($prefijo.'_', null);
+		// /Autentificación api		
 
 		$this->context->smarty->assign(array(
 			'module_dir' 	 	  => $this->_path,

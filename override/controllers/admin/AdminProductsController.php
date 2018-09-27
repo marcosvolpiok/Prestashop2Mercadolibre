@@ -56,61 +56,22 @@ class AdminProductsController extends AdminProductsControllerCore
 
     public function postProcess()
     {   
+		// Autentificación API	
     	require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php');
 		require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
- 
+    	
     	$prefijo="MERCADOLIBRE2PRESTASHOP";
     	$appId = trim(Configuration::get($prefijo.'_APPID'));
 		$secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
-		$redirectURI = 'http://localhost/prestashop1.6.1.20/admin19/index.php?controller=AdminProducts&token=59e36d64b643f119d3da2dbb085ab2e7&ps2ml=true&authFin=true';
-		$siteId = trim(Configuration::get($prefijo.'_PAIS'));  //Configuration::get($prefijo.'_SITEID');
-
+		$siteId = trim(Configuration::get($prefijo.'_PAIS'));
+        $meli = new Meli($appId, $secretKey);
 
         if(!empty(Tools::getValue('ps2ml'))){ //Autentica
 			if(empty($appId) OR empty($secretKey) OR empty($siteId)){
 				echo "Por favor revisa la configuración del módulo mercadolibre2prestashop. Tienes que completar toda la configuración";
 				die;
 			}
-			        	
-            $meli = new Meli($appId, $secretKey);
-
-            if($_GET['code'] || $_SESSION['access_token']) {
-	            // If code exist and session is empty
-	            if($_GET['code'] && !($_SESSION['access_token'])) {
-	                // If the code was in get parameter we authorize
-	                $user = $meli->authorize($_GET['code'], $redirectURI);
-
-	                // Now we create the sessions with the authenticated user
-	                $_SESSION['access_token'] = $user['body']->access_token;
-	                $_SESSION['expires_in'] = time() + $user['body']->expires_in;
-	                $_SESSION['refresh_token'] = $user['body']->refresh_token;
-	            } else {
-	                // We can check if the access token in invalid checking the time
-	                if($_SESSION['expires_in'] < time()) {
-	                    try {
-	                        // Make the refresh proccess
-	                        $refresh = $meli->refreshAccessToken();
-
-	                        // Now we create the sessions with the new parameters
-	                        $_SESSION['access_token'] = $refresh['body']->access_token;
-	                        $_SESSION['expires_in'] = time() + $refresh['body']->expires_in;
-	                        $_SESSION['refresh_token'] = $refresh['body']->refresh_token;
-	                    } catch (Exception $e) {
-	                        echo "Exception: ",  $e->getMessage(), "\n";
-	                    }
-	                }
-	            }
-	        } else {
-	        	//echo $redirectURI . " ---- ";
-	        	//echo "(((((".Meli::$AUTH_URL[$siteId];
-                echo '<p><a alt="Login using MercadoLibre oAuth 2.0" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">Loguearse con Mercado Libre</a></p>';
-            }
-        
-
-            echo '<pre>';
-            print_r($_SESSION);
-            echo '</pre>';
-
+			        
             if(!empty(Tools::getValue('authFin')) OR !empty($_SESSION['access_token'])){ //Publica item
             		$item = Tools::getValue('productBox');
             		foreach($item as $itemId){
@@ -174,10 +135,9 @@ class AdminProductsController extends AdminProductsControllerCore
 
 
             }
-			    		die('xxx');
+			    		//die('xxx');
 
 			}elseif(!empty(Tools::getValue('mercadolibreCategoria'))){ //Asigna categoría
-				echo "Asignando categoría...";
 				//Busca ml2presta
           		//$ml2presta = new Ml2presta();
             	$item = Tools::getValue('productBox');
@@ -195,9 +155,10 @@ class AdminProductsController extends AdminProductsControllerCore
 	            		$ml2presta->add();
 	            	}
             	}
-            	array( "message"=>"Categoría cambiada exitosamente en ".count($item)." productos",
+            	$result=array( "message"=>"Categoría cambiada exitosamente en ".count($item)." productos",
             		"status"=>"200"
             	);
+            	echo json_encode($result);
 				die;
 			}
 
@@ -239,7 +200,8 @@ class AdminProductsController extends AdminProductsControllerCore
 
     public function create_item_array($idProduct){
 				$prod = new Product((int) $idProduct);
-				$image = Image::getImages(1, $p);
+				$image = Image::getImages(1, $idProduct);
+				$arrImageUrl= array();
 
 				foreach($image as $img){
 					$link = new Link();
