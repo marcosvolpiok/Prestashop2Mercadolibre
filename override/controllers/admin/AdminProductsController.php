@@ -68,99 +68,90 @@ class AdminProductsController extends AdminProductsControllerCore
 
         if(!empty(Tools::getValue('ps2ml'))){ //Autentica
 			if(empty($appId) OR empty($secretKey) OR empty($siteId)){
-				echo "Por favor revisa la configuración del módulo mercadolibre2prestashop. Tienes que completar toda la configuración";
+				$arrStatus["error"][] = "Por favor revisa la configuración del módulo mercadolibre2prestashop. Tienes que completar toda la configuración";
 				die;
 			}
 			        
             if(!empty(Tools::getValue('authFin')) OR !empty($_SESSION['access_token'])){ //Publica item
-            		$item = Tools::getValue('productBox');
-            		foreach($item as $itemId){
-          				$ml2presta = new Ml2presta();
+            	$item = Tools::getValue('productBox');
+            	foreach($item as $itemId){
+          			$ml2presta = new Ml2presta();
 
-            			if(!empty(Ml2presta::get_Mlid_By_Idproduct($itemId))){ //Ya existe en DB
-            				echo "Producto ID $itemId ya está publicado en Mercado Libre";
+            		if(!empty(Ml2presta::get_Mlid_By_Idproduct($itemId))){ //Ya existe en DB
+            			$arrStatus["error"][] = "Producto ID $itemId ya está publicado en Mercado Libre";
+            			continue;
+            		}
+            		$arrItem=$this->create_item_array($itemId);
+
+            		$arrItem = $this->validar_producto($arrItem);
+            		if(!$arrItem){
+              			$arrStatus["error"][] = "Producto ID $itemId no tiene precio o stock";
             				continue;
-            			}
-            			$arrItem=$this->create_item_array($itemId);
+            		}
 
-            			$arrItem = $this->validar_producto($arrItem);
-            			if(!$arrItem){
-              				echo "Producto ID $itemId no tiene precio o stock";
-            				continue;
-            			}
+            		if(empty(Ml2presta::get_category_by_idproduct($itemId))){
+            			$arrStatus["error"][] = "Producto ID $itemId no tiene categoría. Por favor asígnale una para poder publicarlo";
+            			continue;
+            		}
 
+					try{
+					    $meliResp=$meli->post('/items', $arrItem, array('access_token' => $_SESSION['access_token']));
+					} catch (Exception $e) {
+	                    $arrStatus["error"][] = "Hubo un error al crear el producto: ",  $e->getMessage(), "\n";
+	                    die;
+	                }
 
+	                if($meliResp["body"]->status!="active"){
+						$arrStatus["error"][] = "Producto ID $itemId error al publicar en Mercado Libre. Por favor inténtalo en 15 minutos nuevamente.";
+						/*
+						if($meliResp["body"]->cause){
+							//print_R($meliResp["body"]->cause);
+						}
+						*/
+	                    continue;
+	                }
 
-            			if(empty(Ml2presta::get_category_by_idproduct($itemId))){
-            				echo "Producto ID $itemId no tiene categoría. Por favor asígnale una para poder publicarlo";
-            				continue;
-            			}
-
-
-					    //echo '<pre>';
-					    try{
-					    	$meliResp=$meli->post('/items', $arrItem, array('access_token' => $_SESSION['access_token']));
-						} catch (Exception $e) {
-	                        echo "Hubo un error al crear el producto: ",  $e->getMessage(), "\n";
-	                        die;
-	                    }
-
-	                    if($meliResp["body"]->status!="active"){
-							echo "Producto ID $itemId error al publicar en Mercado Libre. Por favor inténtalo en 15 minutos nuevamente.";
-							if($meliResp["body"]->cause){
-								//print_R($meliResp["body"]->cause);
-							}
-	                    	continue;
-	                    }
-
-					    //print_r($meliResp);
-					    //echo '</pre>';
-					    //echo "-".$meliResp["body"]->id.".";
-
-
-
-					    if($itemExists=Ml2presta::exists_idproduct($itemId)){
-					    	$ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
-						    $ml2presta->id_ml=$meliResp["body"]->id;
-						    $ml2presta->update();
-					    }else{
-					    	$ml2presta = new Ml2presta();
-						    $ml2presta->id_product=$itemId;
-						    $ml2presta->id_ml=$meliResp["body"]->id;
-						    $ml2presta->save();
-					    }
+					if($itemExists=Ml2presta::exists_idproduct($itemId)){
+					    $ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
+						$ml2presta->id_ml=$meliResp["body"]->id;
+						$ml2presta->update();
+					}else{
+					    $ml2presta = new Ml2presta();
+						$ml2presta->id_product=$itemId;
+						$ml2presta->id_ml=$meliResp["body"]->id;
+						$ml2presta->save();
 					}
 
-
-
-
+					$arrStatus["success"][] = "Producto ID $itemId publicado exitosamente";
+				}
             }
-			    		//die('xxx');
+            echo json_encode($arrStatus);
+			die;
 
-			}elseif(!empty(Tools::getValue('mercadolibreCategoria'))){ //Asigna categoría
-				//Busca ml2presta
-          		//$ml2presta = new Ml2presta();
-            	$item = Tools::getValue('productBox');
-            	$category = Tools::getValue('mercadolibre_category');
+		}elseif(!empty(Tools::getValue('mercadolibreCategoria'))){ //Asigna categoría
+			//Busca ml2presta
+          	//$ml2presta = new Ml2presta();
+            $item = Tools::getValue('productBox');
+            $category = Tools::getValue('mercadolibre_category');
 
-            	foreach($item as $itemId){
-	            	if($itemExists=Ml2presta::exists_idproduct($itemId)){ //Ya existe en DB
-	            		$ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
-	            		$ml2presta->id_ml_category=$category;
-	            		$ml2presta->update();
-	            	}else{
-	            		$ml2presta = new Ml2presta();
-	            		$ml2presta->id_product=$itemId;	            		
-	            		$ml2presta->id_ml_category=$category;
-	            		$ml2presta->add();
-	            	}
-            	}
-            	$result=array( "message"=>"Categoría cambiada exitosamente en ".count($item)." productos",
-            		"status"=>"200"
-            	);
-            	echo json_encode($result);
-				die;
-			}
+            foreach($item as $itemId){
+	            if($itemExists=Ml2presta::exists_idproduct($itemId)){ //Ya existe en DB
+	            	$ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
+	            	$ml2presta->id_ml_category=$category;
+	            	$ml2presta->update();
+	            }else{
+	            	$ml2presta = new Ml2presta();
+	            	$ml2presta->id_product=$itemId;	            		
+	            	$ml2presta->id_ml_category=$category;
+	            	$ml2presta->add();
+	            }
+            }
+            $result=array( "message"=>"Categoría cambiada exitosamente en ".count($item)." productos",
+            "status"=>"200"
+            );
+            echo json_encode($result);
+			die;
+		}
 
         parent::postProcess();
     }
