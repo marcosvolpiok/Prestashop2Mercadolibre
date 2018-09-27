@@ -72,7 +72,7 @@ class AdminProductsController extends AdminProductsControllerCore
 				die;
 			}
 			        
-            if(!empty(Tools::getValue('authFin')) OR !empty($_SESSION['access_token'])){ //Publica item
+            //if(!empty(Tools::getValue('authFin')) OR !empty($_SESSION['access_token'])){ //Publica item
             	$item = Tools::getValue('productBox');
             	foreach($item as $itemId){
           			$ml2presta = new Ml2presta();
@@ -97,7 +97,7 @@ class AdminProductsController extends AdminProductsControllerCore
 					try{
 					    $meliResp=$meli->post('/items', $arrItem, array('access_token' => $_SESSION['access_token']));
 					} catch (Exception $e) {
-	                    $arrStatus["error"][] = "Hubo un error al crear el producto: ",  $e->getMessage(), "\n";
+	                    $arrStatus["error"][] = "Hubo un error al crear el producto: ".  $e->getMessage() . "\n";
 	                    die;
 	                }
 
@@ -124,11 +124,15 @@ class AdminProductsController extends AdminProductsControllerCore
 
 					$arrStatus["success"][] = "Producto ID $itemId publicado exitosamente";
 				}
-            }
+           // }
             echo json_encode($arrStatus);
 			die;
 
 		}elseif(!empty(Tools::getValue('mercadolibreCategoria'))){ //Asigna categoría
+			print_R($_POST);
+			print_R($_GET);
+
+
 			//Busca ml2presta
           	//$ml2presta = new Ml2presta();
             $item = Tools::getValue('productBox');
