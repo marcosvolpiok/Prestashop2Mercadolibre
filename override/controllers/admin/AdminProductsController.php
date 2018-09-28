@@ -101,6 +101,11 @@ class AdminProductsController extends AdminProductsControllerCore
 	                    die;
 	                }
 
+	                /*
+	                print_R($meliResp);
+	                die;
+	                */
+
 	                if($meliResp["body"]->status!="active"){
 						$arrStatus["error"][] =  $this->l("Producto ID") . " $itemId " .  $this->l("error al publicar en Mercado Libre. Por favor inténtalo en 15 minutos nuevamente.");
 						/*
@@ -176,7 +181,7 @@ class AdminProductsController extends AdminProductsControllerCore
     // Revisa si los datos del proudcto son aptos para al API de Mercado Libre
     public function validar_producto($arrProducto){
     	if(strlen($arrProducto["description"]["plain_text"]) > 50000 ){ //max chars
-    		$arrProducto["description"]["plain_text"] = substr($arrProducto["description"]["plain_text"], 0, 500009);
+    		$arrProducto["description"]["plain_text"] = substr($arrProducto["description"]["plain_text"], 0, 50000);
 
     	}elseif(empty($arrProducto["title"])){ //vacío
 			$arrProducto["description"]["title"] =  $this->l("Producto sin título");
