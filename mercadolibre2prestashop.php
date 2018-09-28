@@ -19,7 +19,7 @@ class Mercadolibre2prestashop extends Module
 		$this->name = 'mercadolibre2prestashop';
 		$this->tab = 'shipping_logistics';
 		$this->version = '1';
-		$this->author = 'Fullcart';
+		$this->author = 'Marcosvolpi.com';
 		$this->bootstrap = true;
 
         $this->autoload_class();
@@ -29,8 +29,8 @@ class Mercadolibre2prestashop extends Module
 		
 		//lo que se muestra en el listado de modulos en el backoffice
 		$this->displayName = $this->l('Mercadolibre integración');//nombre
-		$this->description = $this->l('Mercadolibre integración');//descripcion
-		$this->confirmUninstall = $this->l('Realmente quiere desinstalar este modulo?');//mensaje que aparece al momento de desinstalar el modulo
+		$this->description = $this->l('Exportar productos de Prestashop a Mercado Libre');//descripcion
+		$this->confirmUninstall = $this->l('¿Realmente quiere desinstalar este modulo?');//mensaje que aparece al momento de desinstalar el modulo
 	}
 
     public function autoload_class($dir = 'classes')
@@ -53,7 +53,7 @@ class Mercadolibre2prestashop extends Module
 		if (Module::isInstalled('mercadolibre2prestashop'))
 		{
 		  Module::disableByName($this->name);   //note during testing if this is not done, your module will show as installed in modules
-		  die(Tools::displayError('Primero debe desinstalar la version anterior del modulo.'));
+		  die(Tools::displayError($this->l('Primero debe desinstalar la version anterior del modulo')));
 		}
 
 		$this->createConfigVariables();
@@ -80,7 +80,7 @@ class Mercadolibre2prestashop extends Module
 			try{
 				Db::getInstance()->execute($query);
 			} catch (Exception $e) {
-				echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+				echo $this->l('Excepción capturada:'),  $e->getMessage(), "\n";
 				return false;		
 			}
 		}
@@ -163,7 +163,7 @@ class Mercadolibre2prestashop extends Module
 	            }
 	        }
 	    } else {
-            return '<p><a alt="Login using MercadoLibre oAuth 2.0" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">Loguearse con Mercado Libre</a></p>' . print_r($_SESSION, true);
+            return '<p><a alt="'.$this->l('Loguearse con Mercado Libre').'" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">'.$this->l('Loguearse con Mercado Libre').'</a></p>';
         }
         // /Autentificación API	
 
@@ -238,7 +238,7 @@ class Mercadolibre2prestashop extends Module
 		switch ($tabla)
 		{
 			case 'login':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields('Credenciales', Mercadolibre2prestashop\Formulario::getLoginCredenciales($tabla));
+				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields($this->l('Credenciales'), $this->l('Guardar'), Mercadolibre2prestashop\Formulario::getLoginCredenciales($tabla));
 				$prefijo = $this->getPrefijo('CONFIG_LOGIN_CREDENCIAL');
 				$prefijo = 'MERCADOLIBRE2PRESTASHOP';
 

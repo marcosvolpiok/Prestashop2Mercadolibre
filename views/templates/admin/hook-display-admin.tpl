@@ -16,20 +16,20 @@
 <div>
 	<input class="btn btn-default" name="ps2ml" type="button" 
 	onclick="send_form_product()"
-	value="Publicar en MercadoLibre" />
+	value="{l s='Publicar en MercadoLibre' mod='mercadolibre2prestashop'}" />
 </div>
 
 
 <div style="display: inline; margin-left: 12.5%; height: 25%">
 	<input type="hidden" name="mercadolibre_category" id="mercadolibre_category">
 	<div id="mercadolibre_container" style="display: inline">
-		<label style="display: inline" for="mercadolibre_id_categ">Categoría </label>
+		<label style="display: inline" for="mercadolibre_id_categ">{l s='Categoría' mod='mercadolibre2prestashop'} </label>
 			<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1" style="width: 30%; display: inline">
 		</select>
 	</div>
 
 	<div id="mercadolibre_container2" style="display: inline">
-		<input class="btn btn-default" type="button" name="mercadolibreCategoria" value="Asignar categoría" style="display: inline" onclick="send_form_category()">
+		<input class="btn btn-default" type="button" name="mercadolibreCategoria" value="{l s='Asignar categoría' mod='mercadolibre2prestashop'}" style="display: inline" onclick="send_form_category()">
 	</div>
 </div>
 
@@ -39,23 +39,13 @@
 	$("#mercadolibre_result_error").hide();
 	var ultimoSeleccionado;
 
-/*
-	$.get( "https://api.mercadolibre.com/sites/MLA/categories", function( data ) { //Crea categorías padres
-		$( ".result" ).html( data );
-		$("#mercadolibre_id_categ").append('<option value="">Selecciona categoría</option>');
-
-		data.forEach(function(entry) {
-			$("#mercadolibre_id_categ").append('<option value="'+entry.id+'">'+entry.name+'</option>');
-		}, this);	  
-	});
-*/
 
 	$.ajax({
 		type: 'GET',
 		url: 'https://api.mercadolibre.com/sites/MLA/categories',
 		success: function(data){
 			$( ".result" ).html( data );
-			$("#mercadolibre_id_categ").append('<option value="">Selecciona categoría</option>');
+			$("#mercadolibre_id_categ").append('<option value="">{l s='Selecciona categoría' mod='mercadolibre2prestashop'}</option>');
 
 			data.forEach(function(entry) {
 				$("#mercadolibre_id_categ").append('<option value="'+entry.id+'">'+entry.name+'</option>');
@@ -63,8 +53,8 @@
 		},
 
 		error: function(){
-			alert('Hubo un error al conectarse con Mercado Libre. Por favor reintentá en 15 minutos');
-			console.log('Error al conectar a Mercado Libre');
+			console.log("{l s='Hubo un error al conectarse con Mercado Libre. Por favor reintentá en 15 minutos' mod='mercadolibre2prestashop'}");
+			console.log("{l s='Error al conectar a Mercado Libre' mod='mercadolibre2prestashop'}");
 		}
 	});		
 
@@ -104,7 +94,7 @@
 		    	var select = $("<select id='"+id_padre+"' onchange='buscar_hijos(this.value, " + data_orden_actual + ")' data-orden='" + data_orden_actual + "' style='width: 30%; display: inline'></select>");
 		    	$("#mercadolibre_container").append( select );
 			    $("#"+id_padre)
-			    .append('<option value="">Selecciona categoría</option>');
+			    .append('<option value="">{l s='Selecciona categoría' mod='mercadolibre2prestashop'}</option>');
 
 
 

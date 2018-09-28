@@ -3,9 +3,9 @@
 	<div id="general">
 		<div class="panel">
 			<div class="panel-heading">
-				<i class="icon-cogs"></i>Versi&oacute;n utilizada
+				<i class="icon-cogs"></i>{l s='Versi&oacute;n utilizada:' mod='mercadolibre2prestashop'}
 			</div>
-			Utilizando la versi&oacute;n: {$version}
+			{l s='Utilizando la versi&oacute;n:' mod='mercadolibre2prestashop'}{$version}
 		</div>	
 		{$config_general}		
 	</div>

@@ -9,7 +9,7 @@ class Formulario {
 	/**
 	 * Genera los form fields necesarios para crear un formulario
 	 */
-	public static function getFormFields($titulo, $inputs)
+	public static function getFormFields($titulo, $save, $inputs)
 	{	
 			$elements = array(
 						'form' => array(
@@ -19,7 +19,7 @@ class Formulario {
 								),
 								'input' =>$inputs,
 								'submit' => array(
-										'title' => 'Guardar',
+										'title' => $save,
 										'class' => 'button'
 								)
 						)		

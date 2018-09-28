@@ -68,7 +68,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
         if(!empty(Tools::getValue('ps2ml'))){ //Autentica
 			if(empty($appId) OR empty($secretKey) OR empty($siteId)){
-				$arrStatus["error"][] = "Por favor revisa la configuración del módulo mercadolibre2prestashop. Tienes que completar toda la configuración";
+				$arrStatus["error"][] =  $this->l("Por favor revisa la configuración del módulo mercadolibre2prestashop. Tienes que completar toda la configuración");
 				die;
 			}
 			        
@@ -78,31 +78,31 @@ class AdminProductsController extends AdminProductsControllerCore
           			$ml2presta = new Ml2presta();
 
             		if(!empty(Ml2presta::get_Mlid_By_Idproduct($itemId))){ //Ya existe en DB
-            			$arrStatus["error"][] = "Producto ID $itemId ya está publicado en Mercado Libre";
+            			$arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ". $this->l("ya está publicado en Mercado Libre");
             			continue;
             		}
             		$arrItem=$this->create_item_array($itemId);
 
             		$arrItem = $this->validar_producto($arrItem);
             		if(!$arrItem){
-              			$arrStatus["error"][] = "Producto ID $itemId no tiene precio o stock";
+              			$arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".  $this->l(" no tiene precio o stock");
             				continue;
             		}
 
             		if(empty(Ml2presta::get_category_by_idproduct($itemId))){
-            			$arrStatus["error"][] = "Producto ID $itemId no tiene categoría. Por favor asígnale una para poder publicarlo";
+            			$arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".  $this->l("no tiene categoría. Por favor asígnale una para poder publicarlo");
             			continue;
             		}
 
 					try{
 					    $meliResp=$meli->post('/items', $arrItem, array('access_token' => $_SESSION['access_token']));
 					} catch (Exception $e) {
-	                    $arrStatus["error"][] = "Hubo un error al crear el producto: ".  $e->getMessage() . "\n";
+	                    $arrStatus["error"][] =  $this->l("Hubo un error al crear el producto: ").  $e->getMessage() . "\n";
 	                    die;
 	                }
 
 	                if($meliResp["body"]->status!="active"){
-						$arrStatus["error"][] = "Producto ID $itemId error al publicar en Mercado Libre. Por favor inténtalo en 15 minutos nuevamente.";
+						$arrStatus["error"][] =  $this->l("Producto ID") . " $itemId " .  $this->l("error al publicar en Mercado Libre. Por favor inténtalo en 15 minutos nuevamente.");
 						/*
 						if($meliResp["body"]->cause){
 							//print_R($meliResp["body"]->cause);
@@ -122,7 +122,7 @@ class AdminProductsController extends AdminProductsControllerCore
 						$ml2presta->save();
 					}
 
-					$arrStatus["success"][] = "Producto ID $itemId publicado exitosamente";
+					$arrStatus["success"][] =  $this->l("Producto ID") . " $itemId ".  $this->l("publicado exitosamente");
 				}
            // }
             echo json_encode($arrStatus);
@@ -153,7 +153,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	            	$ml2presta->add();
 	            }
             }
-            $result=array( "message"=>"Categoría cambiada exitosamente en ".count($item)." productos",
+            $result=array( "message"=> $this->l("Categoría cambiada exitosamente en ").count($item). $this->l(" productos"),
             "status"=>"200"
             );
             echo json_encode($result);
@@ -177,10 +177,9 @@ class AdminProductsController extends AdminProductsControllerCore
     public function validar_producto($arrProducto){
     	if(strlen($arrProducto["description"]["plain_text"]) > 50000 ){ //max chars
     		$arrProducto["description"]["plain_text"] = substr($arrProducto["description"]["plain_text"], 0, 500009);
-    		echo "adassad";	
 
     	}elseif(empty($arrProducto["title"])){ //vacío
-			$arrProducto["description"]["title"] = "Producto sin título";
+			$arrProducto["description"]["title"] =  $this->l("Producto sin título");
 
     	}elseif(strlen($arrProducto["title"]) > 60 ){ //max chars
 			 $arrProducto["description"]["title"] = substr($arrProducto["description"]["title"], 0, 60);
