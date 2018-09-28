@@ -124,8 +124,13 @@ class Mercadolibre2prestashop extends Module
 
 		$link = new Link(); 
 		$arrAdminDir = explode("/", PS_ADMIN_DIR);
-		$redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ].'/'.$link->getAdminLink('AdminProducts', true).'&ps2ml=true&authFin=true';
-
+		$redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ].'/'.$link->getAdminLink('AdminProducts', true).'&authFin=true';
+/*
+		echo "traza 1";
+		echo '<pre>';
+        print_r($_SESSION);
+        echo '</pre>';
+*/
         $meli = new Meli($appId, $secretKey);
         if($_GET['code'] || $_SESSION['access_token']) {
 	        // If code exist and session is empty
@@ -160,12 +165,6 @@ class Mercadolibre2prestashop extends Module
 	    } else {
             return '<p><a alt="Login using MercadoLibre oAuth 2.0" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">Loguearse con Mercado Libre</a></p>' . print_r($_SESSION, true);
         }
-            /*
-        echo '<pre>';
-        print_r($_SESSION);
-        echo '</pre>';
-        die ('zzzzzzzzzzzzzz'); */
-
         // /Autentificación API	
 
 		return $this->display(__FILE__, 'views/templates/admin/hook-display-admin.tpl');

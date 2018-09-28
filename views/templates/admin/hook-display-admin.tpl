@@ -14,8 +14,8 @@
 
 
 <div>
-	<input class="btn btn-default" name="ps2ml" type="submit" 
-	{* onclick="send_form_product()" *}
+	<input class="btn btn-default" name="ps2ml" type="button" 
+	onclick="send_form_product()"
 	value="Publicar en MercadoLibre" />
 </div>
 
@@ -127,10 +127,9 @@
 		console.log(window.location.href);
 		//form-product
 		$.ajax({
-		  type: 'POST',
-		  url: window.location.href+'&mercadolibreCategoria='+true,
-		  data: $("#form-product").serialize(),
-		  contentType: 'application/json',
+			type: 'POST',
+			url: window.location.href+'&mercadolibreCategoria='+true,
+			data: $("#form-product").serialize(),
 		  success: function(result){ 
 		  	var json = jQuery.parseJSON( result );
 
@@ -153,21 +152,37 @@
 		//form-product
 		$.ajax({
 		  type: 'POST',
-		  url: window.location.href+'&ps2ml='+true,
+		  url: window.location.href+'&ps2ml=true',
 		  data: $("#form-product").serialize(),
-		  contentType: 'application/json',
-		  success: function(result){ 
+		  success: function(result){
+		  	console.log('result: ' + result);
+ 
 		  	var json = jQuery.parseJSON( result );
+		  	console.log('json product: ' + json);
+/*
+			result.success.forEach(function(entry) {
+		  		$("#mercadolibre_result_success").show();
+		  		$("#mercadolibre_result_success_text").append(entry);
+
+			}, this);	
+*/
+			json.error.forEach(function(entry) {
+		  		$("#mercadolibre_result_error").show();
+		  		$("#mercadolibre_result_error_text").append(entry+'<br />');
+
+			}, this);	
+
 
 		  	//alert(result);
-		  	$("#mercadolibre_result_success").show();
-		  	$("#mercadolibre_result_success_text").append(json.message);
 		  },
 
 		  error: function(result){ 
 		  	//alert(result);
-		  	$("#mercadolibre_result_error").show();
-		  	$("#mercadolibre_result_error_text").append(result);
+			data.success.forEach(function(entry) {
+			  	$("#mercadolibre_result_error").show();
+			  	$("#mercadolibre_result_error_text").append(entry);
+			}, this);
+
 		  }
 
 		});		

@@ -129,13 +129,16 @@ class AdminProductsController extends AdminProductsControllerCore
 			die;
 
 		}elseif(!empty(Tools::getValue('mercadolibreCategoria'))){ //Asigna categoría
-			print_R($_POST);
-			print_R($_GET);
+			//print_R($_POST);
+			//print_R($_POST);
 
 
 			//Busca ml2presta
           	//$ml2presta = new Ml2presta();
             $item = Tools::getValue('productBox');
+            $arrItem=json_decode($item);
+
+
             $category = Tools::getValue('mercadolibre_category');
 
             foreach($item as $itemId){
