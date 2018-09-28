@@ -17,7 +17,7 @@ class Mercadolibre2prestashop extends Module
 	{
 		//acerca del modulo en si
 		$this->name = 'mercadolibre2prestashop';
-		$this->tab = 'shipping_logistics';
+		$this->tab = 'administration';
 		$this->version = '1';
 		$this->author = 'Marcosvolpi.com';
 		$this->bootstrap = true;
