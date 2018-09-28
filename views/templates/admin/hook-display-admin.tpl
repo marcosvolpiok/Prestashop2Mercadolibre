@@ -135,13 +135,13 @@
 
 		  	//alert(result);
 		  	$("#mercadolibre_result_success").show();
-		  	$("#mercadolibre_result_success_text").append(json.message);
+		  	$("#mercadolibre_result_success_text").append(json.message+'<br />');
 		  },
 
 		  error: function(result){ 
 		  	//alert(result);
 		  	$("#mercadolibre_result_error").show();
-		  	$("#mercadolibre_result_error_text").append(result);
+		  	$("#mercadolibre_result_error_text").append(result+'<br />');
 		  }
 
 		});		
@@ -159,19 +159,22 @@
  
 		  	var json = jQuery.parseJSON( result );
 		  	console.log('json product: ' + json);
-/*
-			result.success.forEach(function(entry) {
-		  		$("#mercadolibre_result_success").show();
-		  		$("#mercadolibre_result_success_text").append(entry);
 
-			}, this);	
-*/
-			json.error.forEach(function(entry) {
-		  		$("#mercadolibre_result_error").show();
-		  		$("#mercadolibre_result_error_text").append(entry+'<br />');
+		  	if(json.success){
+				json.success.forEach(function(entry) {
+			  		$("#mercadolibre_result_success").show();
+			  		$("#mercadolibre_result_success_text").append(entry+'<br />');
 
-			}, this);	
+				}, this);	
+			}
 
+		  	if(json.error){
+				json.error.forEach(function(entry) {
+			  		$("#mercadolibre_result_error").show();
+			  		$("#mercadolibre_result_error_text").append(entry+'<br />');
+
+				}, this);	
+			}
 
 		  	//alert(result);
 		  },
@@ -180,7 +183,7 @@
 		  	//alert(result);
 			data.success.forEach(function(entry) {
 			  	$("#mercadolibre_result_error").show();
-			  	$("#mercadolibre_result_error_text").append(entry);
+			  	$("#mercadolibre_result_error_text").append(entry+'<br />');
 			}, this);
 
 		  }
