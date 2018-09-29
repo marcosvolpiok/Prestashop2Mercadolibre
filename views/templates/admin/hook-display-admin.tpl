@@ -33,6 +33,13 @@
 	</div>
 </div>
 
+<br />
+<br />
+<br />
+<br />
+<br />
+
+
 <script>
 	$("#mercadolibre_container2").hide();
 	$("#mercadolibre_result_success").hide();
