@@ -18,9 +18,11 @@ class Mercadolibre2prestashop extends Module
 		//acerca del modulo en si
 		$this->name = 'mercadolibre2prestashop';
 		$this->tab = 'administration';
-		$this->version = '1';
+		$this->version = '1.0.0';
 		$this->author = 'Marcosvolpi.com';
+		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_); 
 		$this->bootstrap = true;
+		$this->module_key = '084fe8aecafea8b2f84cca493377eb9b';
 
         $this->autoload_class();
 
