@@ -29,8 +29,26 @@
 			<div class="panel-heading">
 				<i class="icon-cogs"></i>{l s='Versión utilizada:' mod='mercadolibre2prestashop'}
 			</div>
-			{l s='Utilizando la versión:' mod='mercadolibre2prestashop'}{$version}
+			{l s='Utilizando la versión:' mod='mercadolibre2prestashop'}
+
+			{$version|escape:'htmlall':'UTF-8'}
 		</div>	
-		{$config_general}	
+		{* $config_general *}
+		{* $config_general|escape:'htmlall':'UTF-8' *}
+
+<form id="module_form" class="defaultForm form-horizontal" action="#" method="post" enctype="multipart/form-data" novalidate> <input type="hidden" name="btnSubmitLogin" value="1" /> <div class="panel" id="fieldset_0"> <div class="panel-heading"> <i class="icon-cogs"></i> 
+{l s='Credentials'} </div> <div class="form-wrapper"> <div class="form-group"> <label class="control-label col-lg-3 required"> 
+{l s='AppId'} 
+</label> <div class="col-lg-9"> <input type="text" name="appId" id="appId" value="8168669721034782" class="" required="required" /> </div> </div> <div class="form-group"> <label class="control-label col-lg-3 required"> 
+{l s='SecretKey'} 
+</label> <div class="col-lg-9"> <input type="text" name="secretKey" id="secretKey" value="mkQAwLhNs0FZs9Vh0sdqlrRNn7vUTONl" class="" required="required" /> </div> </div> <div class="form-group"> <label class="control-label col-lg-3 required"> 
+{l s='País'}
+ </label> <div class="col-lg-9"> <select name="pais" class=" fixed-width-xl" id="pais" > <option value="" >
+ {l s='Seleccione su país'}
+</option> <option value="MLA" selected="selected" >Argentina</option> <option value="MLB" >Brasil</option> <option value="MCO" >Colombia</option> <option value="MCR" >Costa Rica</option> <option value="MEC" >Ecuador</option> <option value="MLC" >Chile</option> <option value="MLM" >Mexico</option> <option value="MLU" >Uruguay</option> <option value="MLV" >Venezuela</option> <option value="MPA" >Panama</option> <option value="MPE" >Peru</option> <option value="MPT" >Portugal</option> <option value="MRD" >Dominicana</option> </select> <p class="help-block"> 
+ {l s='Seleccione el país con el cual opera con MercadoLibre'} 
+</p> </div> </div> </div><!-- /.form-wrapper --> <div class="panel-footer"> <button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitLogin" class="button"> <i class="process-icon-save"></i>  {l s='Save'} </button> </div> </div> </form>
+
+
 	</div>
 </div>
