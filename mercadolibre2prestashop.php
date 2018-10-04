@@ -173,7 +173,7 @@ class Mercadolibre2prestashop extends Module
 	            if($this->context->cookie->expires_in < time()) {
 		            try {
 		                // Make the refresh proccess
-		                $refresh = $meli->refreshAccessToken();
+		                $meli->refreshAccessToken();
 
 		                // Now we create the sessions with the new parameters
 			            $this->context->cookie->access_token = $user['body']->access_token;

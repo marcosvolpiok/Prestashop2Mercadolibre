@@ -1,7 +1,6 @@
 <?php
 if (!defined('_PS_VERSION_'))
     exit;
-session_start();
 $domain = $_SERVER['HTTP_HOST'];
 $appName = explode('.', $domain)[0];
 class AdminProductsController extends AdminProductsControllerCore
@@ -31,7 +30,8 @@ class AdminProductsController extends AdminProductsControllerCore
     {   
     	require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php');
 		require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
-    	
+    	$arrStatus="";
+
     	$prefijo="MERCADOLIBRE2PRESTASHOP";
     	$appId = trim(Configuration::get($prefijo.'_APPID'));
 		$secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
@@ -71,7 +71,7 @@ class AdminProductsController extends AdminProductsControllerCore
 						
 	                    continue;
 	                }
-					if($itemExists=Ml2presta::exists_idproduct($itemId)){
+					if(Ml2presta::exists_idproduct($itemId)){
 					    $ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
 						$ml2presta->id_ml=$meliResp["body"]->id;
 						$ml2presta->update();
@@ -90,7 +90,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $arrItem=json_decode($item);
             $category = Tools::getValue('mercadolibre_category');
             foreach($item as $itemId){
-	            if($itemExists=Ml2presta::exists_idproduct($itemId)){ //Ya existe en DB
+	            if(Ml2presta::exists_idproduct($itemId)){ //Ya existe en DB
 	            	$ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
 	            	$ml2presta->id_ml_category=$category;
 	            	$ml2presta->update();
@@ -135,14 +135,14 @@ class AdminProductsController extends AdminProductsControllerCore
         }elseif(empty($arrProducto["available_quantity"])){ //vacío
             return false;
         }
-    	elseif(strlen($arrProducto["description"]["plain_text"]) > 50000 ){ //max chars
-    		$arrProducto["description"]["plain_text"] = substr($arrProducto["description"]["plain_text"], 0, 50000);
+    	elseif(Tools::strlen($arrProducto["description"]["plain_text"]) > 50000 ){ //max chars
+    		$arrProducto["description"]["plain_text"] = Tools::substr($arrProducto["description"]["plain_text"], 0, 50000);
 
     	}elseif(empty($arrProducto["title"])){ //vacío
 			$arrProducto["title"] =  $this->l("Producto sin título");
 
-    	}elseif(strlen($arrProducto["title"]) > 60 ){ //max chars
-			 $arrProducto["title"] = substr($arrProducto["title"], 0, 60);
+    	}elseif(Tools::strlen($arrProducto["title"]) > 60 ){ //max chars
+			 $arrProducto["title"] = Tools::substr($arrProducto["title"], 0, 60);
 
     	}
     	return $arrProducto;
@@ -158,7 +158,7 @@ class AdminProductsController extends AdminProductsControllerCore
 				$arrImageUrl= array();
 				foreach($image as $img){
 					$link = new Link();
-					$imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], 'home_default');
+					$imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], ImageType::getFormattedName('home'));
 			        $arrImageUrl[] =
 			            array(
 			                "source" => $imageUrl
