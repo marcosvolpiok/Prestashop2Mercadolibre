@@ -1,6 +1,6 @@
 <?php
 /**
-* 2007-2015 PrestaShop
+* 2007-2018 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -23,7 +23,6 @@
 *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
 
 if (!defined('_PS_VERSION_'))
     exit;
@@ -208,7 +207,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
 				foreach($image as $img){
 					$link = new Link();
-					$imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'],ImageType::getFormattedName('home_default'));
+					$imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'],ImageType::getFormattedName('home'));
 
 			        $arrImageUrl[] =
 			            array(
