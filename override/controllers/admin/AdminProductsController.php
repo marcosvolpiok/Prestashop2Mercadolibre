@@ -1,6 +1,6 @@
 <?php
-/*
-* 2007-2017 PrestaShop
+/**
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,9 +18,9 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2017 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2015 PrestaShop SA
+*  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
@@ -59,7 +59,8 @@ class AdminProductsController extends AdminProductsControllerCore
 		// Autentificación API	
     	require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php');
 		require_once (_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
-    	
+    	$arrStatus="";
+
     	$prefijo="MERCADOLIBRE2PRESTASHOP";
     	$appId = trim(Configuration::get($prefijo.'_APPID'));
 		$secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
@@ -116,7 +117,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	                    continue;
 	                }
 
-					if($itemExists=Ml2presta::exists_idproduct($itemId)){
+					if(Ml2presta::exists_idproduct($itemId)){
 					    $ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
 						$ml2presta->id_ml=$meliResp["body"]->id;
 						$ml2presta->update();
@@ -147,7 +148,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $category = Tools::getValue('mercadolibre_category');
 
             foreach($item as $itemId){
-	            if($itemExists=Ml2presta::exists_idproduct($itemId)){ //Ya existe en DB
+	            if(Ml2presta::exists_idproduct($itemId)){ //Ya existe en DB
 	            	$ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
 	            	$ml2presta->id_ml_category=$category;
 	            	$ml2presta->update();
@@ -180,14 +181,14 @@ class AdminProductsController extends AdminProductsControllerCore
 
     // Revisa si los datos del proudcto son aptos para al API de Mercado Libre
     public function validar_producto($arrProducto){
-    	if(strlen($arrProducto["description"]["plain_text"]) > 50000 ){ //max chars
-    		$arrProducto["description"]["plain_text"] = substr($arrProducto["description"]["plain_text"], 0, 50000);
+    	if(Tools::strlen($arrProducto["description"]["plain_text"]) > 50000 ){ //max chars
+    		$arrProducto["description"]["plain_text"] = Tools::substr($arrProducto["description"]["plain_text"], 0, 50000);
 
     	}elseif(empty($arrProducto["title"])){ //vacío
 			$arrProducto["description"]["title"] =  $this->l("Producto sin título");
 
-    	}elseif(strlen($arrProducto["title"]) > 60 ){ //max chars
-			 $arrProducto["description"]["title"] = substr($arrProducto["description"]["title"], 0, 60);
+    	}elseif(Tools::strlen($arrProducto["title"]) > 60 ){ //max chars
+			 $arrProducto["description"]["title"] = Tools::substr($arrProducto["description"]["title"], 0, 60);
 
     	}elseif(empty($arrProducto["price"])){ //vacío
     		return false;
@@ -207,7 +208,7 @@ class AdminProductsController extends AdminProductsControllerCore
 
 				foreach($image as $img){
 					$link = new Link();
-					$imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], 'home_default');
+					$imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'],ImageType::getFormattedName('home_default'));
 
 			        $arrImageUrl[] =
 			            array(
@@ -234,6 +235,6 @@ class AdminProductsController extends AdminProductsControllerCore
 			        "pictures" => $arrImageUrl
 			    );
 
-			    return $item;
+		    return $item;
     }
 }

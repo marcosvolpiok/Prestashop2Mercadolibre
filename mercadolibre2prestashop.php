@@ -1,4 +1,28 @@
 <?php
+/**
+* 2007-2015 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2015 PrestaShop SA
+*  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
 
 if (!defined('_PS_VERSION_'))
 	exit;
@@ -95,7 +119,7 @@ class Mercadolibre2prestashop extends Module
 			mkdir(_PS_ROOT_DIR_ . "/override/controllers/admin");
 
 			$arch=fopen(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php", "w");
-			fputs($arch, file_get_contents(dirname(__FILE__) . "/override/controllers/admin/AdminProductsController.php"));
+			fputs($arch, Tools::file_get_contents(dirname(__FILE__) . "/override/controllers/admin/AdminProductsController.php"));
 			fclose($arch);
 
 		}
@@ -134,11 +158,11 @@ class Mercadolibre2prestashop extends Module
         echo '</pre>';
 */
         $meli = new Meli($appId, $secretKey);
-        if($_GET['code'] || $_SESSION['access_token']) {
+        if(Tools::getValue('code') || $_SESSION['access_token']) {
 	        // If code exist and session is empty
-	        if($_GET['code'] && !($_SESSION['access_token'])) {
+	        if(Tools::getValue('code') && !($_SESSION['access_token'])) {
 	            // If the code was in get parameter we authorize
-	            $user = $meli->authorize($_GET['code'], $redirectURI);
+	            $user = $meli->authorize(Tools::getValue('code'), $redirectURI);
 
 	            // Now we create the sessions with the authenticated user
 	            $_SESSION['access_token'] = $user['body']->access_token;
@@ -157,7 +181,7 @@ class Mercadolibre2prestashop extends Module
 		                $_SESSION['refresh_token'] = $refresh['body']->refresh_token;
 
 		                //echo "Redireccionar a esta misma URL";
-		                header("location: $redirectURI");
+		                Tools::redirect("$redirectURI");
 		                die;
 		            } catch (Exception $e) {
 		                echo "Exception: ",  $e->getMessage(), "\n";
@@ -203,7 +227,7 @@ class Mercadolibre2prestashop extends Module
 		{
 			Mercadolibre2prestashop\Formulario::postProcessFormularioConfigs(
 				$this->getPrefijo('PREFIJO_CONFIG'), 
-				Mercadolibre2prestashop\Formulario::getFormInputsNames( Mercadolibre2prestashop\Formulario::getLoginCredenciales(null) ) 
+				Mercadolibre2prestashop\Formulario::getFormInputsNames( Mercadolibre2prestashop\Formulario::getLoginCredenciales() ) 
 			);
 		} 
     }		
@@ -235,12 +259,12 @@ class Mercadolibre2prestashop extends Module
 	{
 
 
-		$form_fields;
+		$form_fields="";
 
 		switch ($tabla)
 		{
 			case 'login':
-				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields($this->l('Credenciales'), $this->l('Guardar'), Mercadolibre2prestashop\Formulario::getLoginCredenciales($tabla));
+				$form_fields = Mercadolibre2prestashop\Formulario::getFormFields($this->l('Credenciales'), $this->l('Guardar'), Mercadolibre2prestashop\Formulario::getLoginCredenciales());
 				$prefijo = $this->getPrefijo('CONFIG_LOGIN_CREDENCIAL');
 				$prefijo = 'MERCADOLIBRE2PRESTASHOP';
 
@@ -270,7 +294,7 @@ class Mercadolibre2prestashop extends Module
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
 		
 		$helper->identifier = $this->identifier;
-		$helper->submit_action = 'btnSubmit'.ucfirst($tabla);//nombre del boton de submit. Util al momento de procesar el formulario
+		$helper->submit_action = 'btnSubmit'.Tools::ucfirst($tabla);//nombre del boton de submit. Util al momento de procesar el formulario
 
 		//mejorar este codigo, solo para el form de login de credenciales remueve la url y token de action
 		if($tabla != "login"){
@@ -305,10 +329,6 @@ class Mercadolibre2prestashop extends Module
 		if ( strcasecmp($nombre, 'PREFIJO_CONFIG') == 0)
 			return $prefijo;
 		
-		foreach($variables as $key => $value){
-			if ( strcasecmp($key, $nombre) == 0 )
-				return $prefijo.'_'.$value;
-		}
 		return '';
 	}
 	
@@ -322,7 +342,7 @@ class Mercadolibre2prestashop extends Module
 		foreach ( Mercadolibre2prestashop\Formulario::getFormInputsNames( Mercadolibre2prestashop\Formulario::getLoginCredenciales() ) as $nombre)
 		{
 			//print_r($nombre);
-			Configuration::updateValue($prefijo.'_'.strtoupper( $nombre ), null);
+			Configuration::updateValue($prefijo.'_'.Tools::strtoupper( $nombre ), null);
 		}
 	}	
 
