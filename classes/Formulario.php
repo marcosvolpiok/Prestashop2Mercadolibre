@@ -129,7 +129,8 @@ class Formulario
     
     /**
      * Escribe en la base de datos los valores de tablas de configuraciones
-     * @param string $prefijo prefijo con el que se identifica al formulario en la tabla de configuraciones. Ejemplo: DECIDIR_TEST
+     * @param string $prefijo prefijo con el que se identifica
+     * al formulario en la tabla de configuraciones. Ejemplo: DECIDIR_TEST
      * @param array $inputsName resultado de la funcion getFormInputsNames
      */
     public static function postProcessFormularioConfigs($prefijo, $inputsName)
@@ -156,7 +157,8 @@ class Formulario
     
     /**
      * Trae de los valores de configuracion del modulo, listos para ser usados como fields_value en un form
-     * @param string $prefijo prefijo con el que se identifica al formulario en la tabla de configuraciones. Ejemplo: DECIDIR_TEST
+     * @param string $prefijo prefijo con el que se identifica
+     * al formulario en la tabla de configuraciones. Ejemplo: DECIDIR_TEST
      * @param array $inputsName resultado de la funcion getFormInputsNames
      */
     public static function getConfigs($prefijo, $inputsName)

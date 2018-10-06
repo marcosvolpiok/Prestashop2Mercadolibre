@@ -65,39 +65,49 @@ class AdminProductsController extends AdminProductsControllerCore
         $meli = new Meli($appId, $secretKey);
         if (!empty(Tools::getValue('ps2ml'))) { //Autentica
             if (empty($appId) or empty($secretKey) or empty($siteId)) {
-                $arrStatus["error"][] =  $this->l("Por favor revisa la configuración del módulo mercadolibre2prestashop. Tienes que completar toda la configuración");
+                $arrStatus["error"][] =  $this->l("Por favor revisa la configuración del módulo
+                 mercadolibre2prestashop. Tienes que completar toda la configuración");
                 die;
             }
             $item = Tools::getValue('productBox');
             foreach ($item as $itemId) {
                 $ml2presta = new Ml2presta();
-                if (!empty(Ml2presta::get_Mlid_By_Idproduct($itemId))) { //Ya existe en DB
-                    $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ". $this->l("ya está publicado en Mercado Libre");
+                if (!empty(Ml2presta::getMlIdByIdProduct($itemId))) { //Ya existe en DB
+                    $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".
+                    $this->l("ya está publicado en Mercado Libre");
                     continue;
                 }
-                $arrItem=$this->create_item_array($itemId);
-                $arrItem = $this->validar_producto($arrItem);
+                $arrItem=$this->createItemArray($itemId);
+                $arrItem = $this->validarProducto($arrItem);
                 if (!$arrItem) {
-                    $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".  $this->l(" no tiene precio o stock");
+                    $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".
+                    $this->l(" no tiene precio o stock");
                     continue;
                 }
-                if (empty(Ml2presta::get_category_by_idproduct($itemId))) {
-                    $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".  $this->l("no tiene categoría. Por favor asígnale una para poder publicarlo");
+                if (empty(Ml2presta::getCategoryByIdProduct($itemId))) {
+                    $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".
+                    $this->l("no tiene categoría. Por favor asígnale una para poder publicarlo");
                     continue;
                 }
                 try {
-                    $meliResp=$meli->post('/items', $arrItem, array('access_token' => $this->context->cookie->access_token));
+                    $meliResp=$meli->post(
+                        '/items',
+                        $arrItem,
+                        array('access_token' => $this->context->cookie->access_token)
+                    );
                 } catch (Exception $e) {
                     $arrStatus["error"][] =  $this->l("Hubo un error al crear el producto: ").  $e->getMessage() . "\n";
                     die;
                 }
                     
                 if ($meliResp["body"]->status!="active") {
-                    $arrStatus["error"][] =  $this->l("Producto ID") . " $itemId " .  $this->l("error al publicar en Mercado Libre. Por favor inténtalo en 15 minutos nuevamente.".print_R($meliResp, true));
+                    $arrStatus["error"][] =  $this->l("Producto ID") . " $itemId " .
+                    $this->l("error al publicar en Mercado Libre.
+                        Por favor inténtalo en 15 minutos nuevamente.".print_R($meliResp, true));
                         
                     continue;
                 }
-                if (Ml2presta::exists_idproduct($itemId)) {
+                if (Ml2presta::existsIdproduct($itemId)) {
                     $ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
                     $ml2presta->id_ml=$meliResp["body"]->id;
                     $ml2presta->update();
@@ -116,7 +126,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $arrItem=json_decode($item);
             $category = Tools::getValue('mercadolibre_category');
             foreach ($item as $itemId) {
-                if (Ml2presta::exists_idproduct($itemId)) { //Ya existe en DB
+                if (Ml2presta::existsIdproduct($itemId)) { //Ya existe en DB
                     $ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
                     $ml2presta->id_ml_category=$category;
                     $ml2presta->update();
@@ -127,7 +137,8 @@ class AdminProductsController extends AdminProductsControllerCore
                     $ml2presta->add();
                 }
             }
-            $result=array( "message"=> $this->l("Categoría cambiada exitosamente en ").count($item). $this->l(" productos"),
+            $result=array( "message"=> $this->l("Categoría cambiada exitosamente en ").
+                count($item). $this->l(" productos"),
             "status"=>"200"
             );
             echo json_encode($result);
@@ -156,14 +167,15 @@ class AdminProductsController extends AdminProductsControllerCore
     * date: 2018-09-28 18:41:53
     * version: 1
     */
-    public function validar_producto($arrProducto)
+    public function validarProducto($arrProducto)
     {
         if (empty($arrProducto["price"])) { //vacío
             return false;
         } elseif (empty($arrProducto["available_quantity"])) { //vacío
             return false;
         } elseif (Tools::strlen($arrProducto["description"]["plain_text"]) > 50000) { //max chars
-            $arrProducto["description"]["plain_text"] = Tools::substr($arrProducto["description"]["plain_text"], 0, 50000);
+            $arrProducto["description"]["plain_text"] =
+            Tools::substr($arrProducto["description"]["plain_text"], 0, 50000);
         } elseif (empty($arrProducto["title"])) { //vacío
             $arrProducto["title"] =  $this->l("Producto sin título");
         } elseif (Tools::strlen($arrProducto["title"]) > 60) { //max chars
@@ -176,7 +188,7 @@ class AdminProductsController extends AdminProductsControllerCore
     * date: 2018-09-28 18:41:53
     * version: 1
     */
-    public function create_item_array($idProduct)
+    public function createItemArray($idProduct)
     {
         $prod = new Product((int) $idProduct);
         $image = Image::getImages(1, $idProduct);
@@ -196,7 +208,7 @@ class AdminProductsController extends AdminProductsControllerCore
                             "source" => $imageUrl
                         );
         }
-        $producCategory=Ml2presta::get_category_by_idproduct($idProduct);
+        $producCategory=Ml2presta::getCategoryByIdProduct($idProduct);
         $item = array(
                     "title" => $prod->name[1],
                     "category_id" => $producCategory,

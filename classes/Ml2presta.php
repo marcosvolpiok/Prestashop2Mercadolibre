@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class ml2presta extends ObjectModel
+class Ml2Presta extends ObjectModel
 {
     public $id_ml2presta;
     public $id_product;
@@ -45,7 +45,7 @@ class ml2presta extends ObjectModel
     );
 
 
-    public function get_Mlid_By_Idproduct($id_product)
+    public function getMlIdByIdProduct($id_product)
     {
         $query="SELECT COUNT(id_ml) AS Q, id_ml, id_ml2presta
 		FROM ". _DB_PREFIX_ . "ml2presta
@@ -58,7 +58,7 @@ class ml2presta extends ObjectModel
     }
 
     //Si existe el registro, devuelve el ID, sino devuelve false
-    public function exists_idproduct($id_product)
+    public function existsIdProduct($id_product)
     {
         $query="SELECT id_ml2presta
 		FROM ". _DB_PREFIX_ . "ml2presta
@@ -71,7 +71,7 @@ class ml2presta extends ObjectModel
     }
 
     //Devuelve id de categoría con el id de prestashop
-    public function get_category_by_idproduct($id_product)
+    public function getCategoryByIdProduct($id_product)
     {
         $query="SELECT id_ml_category
 		FROM ". _DB_PREFIX_ . "ml2presta

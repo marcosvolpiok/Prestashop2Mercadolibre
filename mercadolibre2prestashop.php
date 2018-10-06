@@ -47,7 +47,7 @@ class Mercadolibre2prestashop extends Module
         $this->bootstrap = true;
         $this->module_key = '084fe8aecafea8b2f84cca493377eb9b';
 
-        $this->autoload_class();
+        $this->autoloadClass();
 
 
         parent::__construct();
@@ -55,10 +55,12 @@ class Mercadolibre2prestashop extends Module
         //lo que se muestra en el listado de modulos en el backoffice
         $this->displayName = $this->l('Mercadolibre integración');//nombre
         $this->description = $this->l('Exportar productos de Prestashop a Mercado Libre');//descripcion
-        $this->confirmUninstall = $this->l('¿Realmente quiere desinstalar este modulo?');//mensaje que aparece al momento de desinstalar el modulo
+        $this->confirmUninstall = $this->l(
+            '¿Realmente quiere desinstalar este modulo?'
+        );//mensaje que aparece al momento de desinstalar el modulo
     }
 
-    public function autoload_class($dir = 'classes')
+    public function autoloadClass($dir = 'classes')
     {
         if ($files = Tools::scandir(_PS_MODULE_DIR_.$this->name, 'php', $dir)) {
             foreach ($files as $file) {
@@ -71,9 +73,9 @@ class Mercadolibre2prestashop extends Module
 
 
     public function install()
-    {//instalacion del modulo
+    {
         if (Module::isInstalled('mercadolibre2prestashop')) {
-            Module::disableByName($this->name);   //note during testing if this is not done, your module will show as installed in modules
+            Module::disableByName($this->name);
             die(Tools::displayError($this->l('Primero debe desinstalar la version anterior del modulo')));
         }
 
@@ -114,7 +116,8 @@ class Mercadolibre2prestashop extends Module
             mkdir(_PS_ROOT_DIR_ . "/override/controllers/admin");
 
             $arch=fopen(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php", "w");
-            fputs($arch, Tools::file_get_contents(dirname(__FILE__) . "/override/controllers/admin/AdminProductsController.php"));
+            fputs($arch, Tools::file_get_contents(dirname(__FILE__) .
+                "/override/controllers/admin/AdminProductsController.php"));
             fclose($arch);
         }
 
@@ -126,7 +129,7 @@ class Mercadolibre2prestashop extends Module
     }
 
     public function uninstall()
-    {//desinstalacion
+    {
         return parent::uninstall();
     }
     
@@ -144,7 +147,9 @@ class Mercadolibre2prestashop extends Module
 
         $link = new Link();
         $arrAdminDir = explode("/", PS_ADMIN_DIR);
-        $redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST'].__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ].'/'.$link->getAdminLink('AdminProducts', true).'&authFin=true';
+        $redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST']
+        .__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ]
+        .'/'.$link->getAdminLink('AdminProducts', true).'&authFin=true';
         /*
                 echo "traza 1";
                 echo '<pre>';
@@ -183,7 +188,10 @@ class Mercadolibre2prestashop extends Module
                 }
             }
         } else {
-            return '<p><a alt="'.$this->l('Loguearse con Mercado Libre').'" class="btn" href="' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">'.$this->l('Loguearse con Mercado Libre').'</a></p>';
+            return '<p><a alt="'.$this->l('Loguearse con Mercado Libre')
+            .'" class="btn" href="'
+            . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">'
+            .$this->l('Loguearse con Mercado Libre').'</a></p>';
         }
         // /Autentificación API
 
@@ -196,7 +204,7 @@ class Mercadolibre2prestashop extends Module
      */
     public function getContent()
     {
-        $this->_postProcess();
+        $this->postear();
 
         //Autentificación api
         $prefijo = 'MERCADOLIBRE2PRESTASHOP';
@@ -204,23 +212,26 @@ class Mercadolibre2prestashop extends Module
         // /Autentificación api
 
         $this->context->smarty->assign(array(
-            'module_dir' 	 	  => $this->_path,
-            'version'    	 	  => $this->version,
-            'url_base'			  => "//".Tools::getHttpHost(false).__PS_BASE_URI__,
-            'config_general' 	  => $this->renderConfigForms(),
+            'module_dir' => $this->_path,
+            'version' => $this->version,
+            'url_base' => "//".Tools::getHttpHost(false).__PS_BASE_URI__,
+            'config_general' => $this->renderConfigForms(),
         ));
-        $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');//recupero el template de configuracion
+        $output = $this->context->smarty->fetch($this->local_path.
+        'views/templates/admin/configure.tpl');//recupero el template de configuracion
         
         return $output;
     }
 
 
-    public function _postProcess()
+    public function postear()
     {
         if (Tools::isSubmit('btnSubmitLogin')) {
             Mercadolibre2prestashop\Formulario::postProcessFormularioConfigs(
                 $this->getPrefijo('PREFIJO_CONFIG'),
-                Mercadolibre2prestashop\Formulario::getFormInputsNames(Mercadolibre2prestashop\Formulario::getLoginCredenciales())
+                Mercadolibre2prestashop\Formulario::getFormInputsNames(
+                    Mercadolibre2prestashop\Formulario::getLoginCredenciales()
+                )
             );
         }
     }
@@ -244,7 +255,7 @@ class Mercadolibre2prestashop extends Module
     }
 
     /**
-     * 	Genera el  formulario que corresponda segun la tabla ingresada
+     * Genera el  formulario que corresponda segun la tabla ingresada
      * @param string $tabla nombre de la tabla
      * @param array $fields_value
      */
@@ -254,7 +265,11 @@ class Mercadolibre2prestashop extends Module
 
         switch ($tabla) {
             case 'login':
-                $form_fields = Mercadolibre2prestashop\Formulario::getFormFields($this->l('Credenciales'), $this->l('Guardar'), Mercadolibre2prestashop\Formulario::getLoginCredenciales());
+                $form_fields = Mercadolibre2prestashop\Formulario::getFormFields(
+                    $this->l('Credenciales'),
+                    $this->l('Guardar'),
+                    Mercadolibre2prestashop\Formulario::getLoginCredenciales()
+                );
                 $prefijo = $this->getPrefijo('CONFIG_LOGIN_CREDENCIAL');
                 $prefijo = 'MERCADOLIBRE2PRESTASHOP';
 
@@ -262,7 +277,10 @@ class Mercadolibre2prestashop extends Module
         }
 
         if (isset($prefijo)) {
-            $fields_value= Mercadolibre2prestashop\Formulario::getConfigs($prefijo, Mercadolibre2prestashop\Formulario::getFormInputsNames($form_fields['form']['input']));
+            $fields_value= Mercadolibre2prestashop\Formulario::getConfigs(
+                $prefijo,
+                Mercadolibre2prestashop\Formulario::getFormInputsNames($form_fields['form']['input'])
+            );
         }
 
         return $this->getHelperForm($tabla, $fields_value)->generateForm(array($form_fields));
@@ -274,18 +292,20 @@ class Mercadolibre2prestashop extends Module
      * Genera un formulario
      * @param String $tabla nombre de la tabla que se usa para generar el formulario
      */
-    public function getHelperForm($tabla, $fields_value=null)
+    public function getHelperForm($tabla, $fields_value = null)
     {
         $helper = new HelperForm();
 
         $helper->show_toolbar = false;//no mostrar el toolbar
         $helper->table = $this->table;
         $helper->module = $this;
-        $helper->default_form_language = $this->context->language->id;//el idioma por defecto es el que esta configurado en prestashop
+        $helper->default_form_language = $this->context->language->id;//el idioma por defecto
         $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG', 0);
         
         $helper->identifier = $this->identifier;
-        $helper->submit_action = 'btnSubmit'.Tools::ucfirst($tabla);//nombre del boton de submit. Util al momento de procesar el formulario
+        $helper->submit_action = 'btnSubmit'.
+        Tools::ucfirst($tabla);//nombre del boton de submit
+        //Util al momento de procesar el formulario
 
         //mejorar este codigo, solo para el form de login de credenciales remueve la url y token de action
         if ($tabla != "login") {
@@ -331,8 +351,10 @@ class Mercadolibre2prestashop extends Module
     public function createConfigVariables()
     {
         $prefijo = 'MERCADOLIBRE2PRESTASHOP';
-        
-        foreach (Mercadolibre2prestashop\Formulario::getFormInputsNames(Mercadolibre2prestashop\Formulario::getLoginCredenciales()) as $nombre) {
+        $loginCredentials = Mercadolibre2prestashop\Formulario::getLoginCredenciales();
+        $inputs = Mercadolibre2prestashop\Formulario::getFormInputsNames($loginCredentials);
+
+        foreach ($inputs as $nombre) {
             //print_r($nombre);
             Configuration::updateValue($prefijo.'_'.Tools::strtoupper($nombre), null);
         }
