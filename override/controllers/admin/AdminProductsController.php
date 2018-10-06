@@ -182,6 +182,11 @@ class AdminProductsController extends AdminProductsControllerCore
 				$image = Image::getImages(1, $idProduct);
 				$arrImageUrl= array();
 				foreach($image as $img){
+                    $i++;
+                    if($i > 12){
+                        continue;
+                    }
+                                        
 					$link = new Link();
 					$imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], ImageType::getFormattedName('home'));
 			        $arrImageUrl[] =
