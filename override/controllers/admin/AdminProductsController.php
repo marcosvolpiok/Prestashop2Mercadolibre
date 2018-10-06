@@ -108,7 +108,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     continue;
                 }
                 if (Ml2presta::existsIdproduct($itemId)) {
-                    $ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
+                    $ml2presta = new Ml2presta(Ml2presta::existsIdProduct($itemId));
                     $ml2presta->id_ml=$meliResp["body"]->id;
                     $ml2presta->update();
                 } else {
@@ -202,7 +202,7 @@ class AdminProductsController extends AdminProductsControllerCore
             }
                                         
             $link = new Link();
-            $imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], ImageType::getFormattedName('home'));
+            $imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], ImageType::getFormatedName('home'));
             $arrImageUrl[] =
                         array(
                             "source" => $imageUrl
