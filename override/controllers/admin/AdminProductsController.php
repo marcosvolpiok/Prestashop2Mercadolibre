@@ -181,6 +181,8 @@ class AdminProductsController extends AdminProductsControllerCore
 				$prod = new Product((int) $idProduct);
 				$image = Image::getImages(1, $idProduct);
 				$arrImageUrl= array();
+                $i=0;
+                
 				foreach($image as $img){
                     $i++;
                     if($i > 12){
