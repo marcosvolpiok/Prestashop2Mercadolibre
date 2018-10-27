@@ -49,7 +49,7 @@ class Ml2Presta extends ObjectModel
     {
         $query="SELECT COUNT(id_ml) AS Q, id_ml, id_ml2presta
 		FROM ". _DB_PREFIX_ . "ml2presta
-		WHERE id_product = " . $id_product;
+		WHERE id_product = " . (int) $id_product;
         $res=Db::getInstance()->executeS($query);
         
         //print_r($res);
@@ -62,7 +62,7 @@ class Ml2Presta extends ObjectModel
     {
         $query="SELECT id_ml2presta
 		FROM ". _DB_PREFIX_ . "ml2presta
-		WHERE id_product = " . $id_product;
+		WHERE id_product = " . (int) $id_product;
         $res=Db::getInstance()->executeS($query);
         
         //print_r($res);
@@ -75,7 +75,7 @@ class Ml2Presta extends ObjectModel
     {
         $query="SELECT id_ml_category
 		FROM ". _DB_PREFIX_ . "ml2presta
-		WHERE id_product = " . $id_product;
+		WHERE id_product = " . (int) $id_product;
         $res=Db::getInstance()->executeS($query);
         
         //print_r($res);
