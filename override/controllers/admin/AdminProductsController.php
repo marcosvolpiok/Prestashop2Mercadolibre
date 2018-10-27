@@ -65,28 +65,28 @@ class AdminProductsController extends AdminProductsControllerCore
         $meli = new Meli($appId, $secretKey);
         if (!empty(Tools::getValue('ps2ml'))) { //Autentica
             if (empty($appId) or empty($secretKey) or empty($siteId)) {
-                $arrStatus["error"][] =  $this->l("Por favor revisa la configuración del módulo
-                 mercadolibre2prestashop. Tienes que completar toda la configuración");
+                $arrStatus["error"][] =  $this->l("Please check the module configuration
+                  mercadolibre2prestashop. You have to complete all the configuration");
                 die;
             }
             $item = Tools::getValue('productBox');
             foreach ($item as $itemId) {
                 $ml2presta = new Ml2presta();
                 if (!empty(Ml2presta::getMlIdByIdProduct($itemId))) { //Ya existe en DB
-                    $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".
-                    $this->l("ya está publicado en Mercado Libre");
+                    $arrStatus["error"][] =  $this->l("Product ID") ." $itemId ".
+                    $this->l("Already published in Mercado Libre");
                     continue;
                 }
                 $arrItem=$this->createItemArray($itemId);
                 $arrItem = $this->validarProducto($arrItem);
                 if (!$arrItem) {
                     $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".
-                    $this->l(" no tiene precio o stock");
+                    $this->l("It has no price or stock");
                     continue;
                 }
                 if (empty(Ml2presta::getCategoryByIdProduct($itemId))) {
                     $arrStatus["error"][] =  $this->l("Producto ID") ." $itemId ".
-                    $this->l("no tiene categoría. Por favor asígnale una para poder publicarlo");
+                    $this->l("It has no category. Please assign one to be able to publish it");
                     continue;
                 }
                 try {
@@ -96,14 +96,14 @@ class AdminProductsController extends AdminProductsControllerCore
                         array('access_token' => $this->context->cookie->access_token)
                     );
                 } catch (Exception $e) {
-                    $arrStatus["error"][] =  $this->l("Hubo un error al crear el producto: ").  $e->getMessage() . "\n";
+                    $arrStatus["error"][] =  $this->l("There was an error creating the product: ").  $e->getMessage() . "\n";
                     die;
                 }
                     
                 if ($meliResp["body"]->status!="active") {
                     $arrStatus["error"][] =  $this->l("Producto ID") . " $itemId " .
-                    $this->l("error al publicar en Mercado Libre.
-                        Por favor inténtalo en 15 minutos nuevamente.".print_R($meliResp, true));
+                    $this->l("error when publishing in Mercado Libre. 
+                         Please try again in 15 minutes.".print_R($meliResp, true));
                         
                     continue;
                 }
@@ -117,7 +117,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $ml2presta->id_ml=$meliResp["body"]->id;
                     $ml2presta->save();
                 }
-                $arrStatus["success"][] =  $this->l("Producto ID") . " $itemId ".  $this->l("publicado exitosamente");
+                $arrStatus["success"][] =  $this->l("Product ID") . " $itemId ".  $this->l("Successfully published");
             }
             echo json_encode($arrStatus);
             die;
@@ -137,7 +137,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $ml2presta->add();
                 }
             }
-            $result=array( "message"=> $this->l("Categoría cambiada exitosamente en ").
+            $result=array( "message"=> $this->l("Category successfully changed in ").
                 count($item). $this->l(" productos"),
             "status"=>"200"
             );
@@ -177,7 +177,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $arrProducto["description"]["plain_text"] =
             Tools::substr($arrProducto["description"]["plain_text"], 0, 50000);
         } elseif (empty($arrProducto["title"])) { //vacío
-            $arrProducto["title"] =  $this->l("Producto sin título");
+            $arrProducto["title"] =  $this->l("Product without title");
         } elseif (Tools::strlen($arrProducto["title"]) > 60) { //max chars
             $arrProducto["title"] = Tools::substr($arrProducto["title"], 0, 60);
         }

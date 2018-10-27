@@ -27,7 +27,7 @@
 	<div id="general">
 		<div class="panel">
 			<div class="panel-heading">
-				<i class="icon-cogs"></i>{l s='Versión utilizada:' mod='mercadolibre2prestashop'}
+				<i class="icon-cogs"></i>{l s='Version used:' mod='mercadolibre2prestashop'}
 			</div>
 			{l s='Utilizando la versión:' mod='mercadolibre2prestashop'}
 
@@ -42,12 +42,12 @@
 </label> <div class="col-lg-9"> <input type="text" name="appId" id="appId" value="8168669721034782" class="" required="required" /> </div> </div> <div class="form-group"> <label class="control-label col-lg-3 required"> 
 {l s='SecretKey' mod='mercadolibre2prestashop'} 
 </label> <div class="col-lg-9"> <input type="text" name="secretKey" id="secretKey" value="mkQAwLhNs0FZs9Vh0sdqlrRNn7vUTONl" class="" required="required" /> </div> </div> <div class="form-group"> <label class="control-label col-lg-3 required"> 
-{l s='País' mod='mercadolibre2prestashop'}
+{l s='Country' mod='mercadolibre2prestashop'}
  </label> <div class="col-lg-9"> <select name="pais" class=" fixed-width-xl" id="pais" > <option value="" >
- {l s='Seleccione su país' mod='mercadolibre2prestashop'}
+ {l s='Select your country' mod='mercadolibre2prestashop'}
 </option> <option value="MLA" selected="selected" >Argentina</option> <option value="MLB" >Brasil</option> <option value="MCO" >Colombia</option> <option value="MCR" >Costa Rica</option> <option value="MEC" >Ecuador</option> <option value="MLC" >Chile</option> <option value="MLM" >Mexico</option> <option value="MLU" >Uruguay</option> <option value="MLV" >Venezuela</option> <option value="MPA" >Panama</option> <option value="MPE" >Peru</option> <option value="MPT" >Portugal</option> <option value="MRD" >Dominicana</option> </select> <p class="help-block"> 
- {l s='Seleccione el país con el cual opera con MercadoLibre' mod='mercadolibre2prestashop'} 
-</p> </div> </div> </div><!-- /.form-wrapper --> <div class="panel-footer"> <button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitLogin" class="button"> <i class="process-icon-save"></i>  {l s='Guardar' mod='mercadolibre2prestashop'} </button> </div> </div> </form>
+ {l s='Select the country with which you operate with MercadoLibre' mod='mercadolibre2prestashop'} 
+</p> </div> </div> </div><!-- /.form-wrapper --> <div class="panel-footer"> <button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitLogin" class="button"> <i class="process-icon-save"></i>  {l s='Save' mod='mercadolibre2prestashop'} </button> </div> </div> </form>
 
 
 	</div>
