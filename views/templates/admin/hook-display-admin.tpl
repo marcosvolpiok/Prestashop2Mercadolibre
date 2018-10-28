@@ -41,20 +41,20 @@
 <div>
 	<input class="btn btn-default" name="ps2ml" type="button" 
 	onclick="send_form_product()"
-	value="{l s='Publicar en MercadoLibre' mod='mercadolibre2prestashop'}" />
+	value="{l s='Exportar a Mercado Libre' mod='mercadolibre2prestashop'}" />
 </div>
 
 
 <div style="display: inline; margin-left: 12.5%; height: 25%">
 	<input type="hidden" name="mercadolibre_category" id="mercadolibre_category">
 	<div id="mercadolibre_container" style="display: inline">
-		<label style="display: inline" for="mercadolibre_id_categ">{l s='Categoría' mod='mercadolibre2prestashop'} </label>
+		<label style="display: inline" for="mercadolibre_id_categ">{l s='Category' mod='mercadolibre2prestashop'} </label>
 			<select id="mercadolibre_id_categ" onchange="buscar_hijos(this.value, 1)" data-orden="1" style="width: 30%; display: inline">
 		</select>
 	</div>
 
 	<div id="mercadolibre_container2" style="display: inline">
-		<input class="btn btn-default" type="button" name="mercadolibreCategoria" value="{l s='Asignar categoría' mod='mercadolibre2prestashop'}" style="display: inline" onclick="send_form_category()">
+		<input class="btn btn-default" type="button" name="mercadolibreCategoria" value="{l s='Assign categories' mod='mercadolibre2prestashop'}" style="display: inline" onclick="send_form_category()">
 	</div>
 </div>
 
@@ -77,7 +77,7 @@
 		url: 'https://api.mercadolibre.com/sites/MLA/categories',
 		success: function(data){
 			$( ".result" ).html( data );
-			$("#mercadolibre_id_categ").append('<option value="">{l s='Selecciona categoría' mod='mercadolibre2prestashop'}</option>');
+			$("#mercadolibre_id_categ").append('<option value="">{l s='Select category' mod='mercadolibre2prestashop'}</option>');
 
 			data.forEach(function(entry) {
 				$("#mercadolibre_id_categ").append('<option value="'+entry.id+'">'+entry.name+'</option>');
@@ -85,8 +85,8 @@
 		},
 
 		error: function(){
-			console.log("{l s='Hubo un error al conectarse con Mercado Libre. Por favor reintentá en 15 minutos' mod='mercadolibre2prestashop'}");
-			console.log("{l s='Error al conectar a Mercado Libre' mod='mercadolibre2prestashop'}");
+			console.log("{l s='There is a problem connecting with Mercado Libre. Please try in 15 minutes' mod='mercadolibre2prestashop'}");
+			console.log("{l s='Error connecting to Mercado Libre' mod='mercadolibre2prestashop'}");
 		}
 	});		
 

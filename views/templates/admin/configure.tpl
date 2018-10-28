@@ -29,7 +29,7 @@
 			<div class="panel-heading">
 				<i class="icon-cogs"></i>{l s='Version used:' mod='mercadolibre2prestashop'}
 			</div>
-			{l s='Utilizando la versión:' mod='mercadolibre2prestashop'}
+			{l s='Version:' mod='mercadolibre2prestashop'}
 
 			{$version|escape:'htmlall':'UTF-8'}
 		</div>	
