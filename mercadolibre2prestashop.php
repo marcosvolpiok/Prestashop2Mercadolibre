@@ -137,7 +137,7 @@ class Mercadolibre2prestashop extends Module
     public function hookDisplayAdminListAfter()
     {
         // Autentificación API
-        require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php');
+        require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/mercadolibre-php-sdk/Meli/meli.php');
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
  
         $prefijo="MERCADOLIBRE2PRESTASHOP";

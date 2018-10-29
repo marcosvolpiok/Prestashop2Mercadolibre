@@ -54,7 +54,7 @@ class AdminProductsController extends AdminProductsControllerCore
     */
     public function postProcess()
     {
-        require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/php-sdk/Meli/meli.php');
+        require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/mercadolibre-php-sdk/Meli/meli.php');
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
         $arrStatus="";
 
