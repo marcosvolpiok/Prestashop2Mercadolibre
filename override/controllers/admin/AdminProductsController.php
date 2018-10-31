@@ -138,7 +138,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
             $result=array( "message"=> $this->l("Category successfully changed in ").
-                count($item). $this->l(" productos"),
+                count($item). $this->l(" products"),
             "status"=>"200"
             );
             echo json_encode($result);

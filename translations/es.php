@@ -25,3 +25,4 @@ $_MODULE['<{mercadolibre2prestashop}default-bootstrap>hook-display-admin_03368e3
 $_MODULE['<{mercadolibre2prestashop}default-bootstrap>hook-display-admin_57455f98c55d4d0abbe594345eb36034'] = 'Hubo un error al conectarse con Mercado Libre. Por favor intentá nuevamente en 15 minutos';
 $_MODULE['<{mercadolibre2prestashop}default-bootstrap>hook-display-admin_c668912c684b729dd2cedca9a0cc4a09'] = 'Error al conectar con Mercado Libre';
 $_MODULE['<{mercadolibre2prestashop}default-bootstrap>hook-display-admin_9d74ee624d873cf13b64ee6aaed38bd8'] = 'Selecciona categoría';
+$_MODULE['<{mercadolibre2prestashop}default-bootstrap>mercadolibre2prestashop_f57c2bd3b1cb67b8375bcbb61c401a7b'] = 'Completa el campo País, en la configuración del módulo Mercadolibre2presashop';
