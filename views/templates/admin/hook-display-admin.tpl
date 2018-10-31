@@ -162,6 +162,8 @@
 
 		  error: function(result){ 
 		  	//alert(result);
+		  	console.log('resultado posteando categoría cn error: ' + result);
+		  	console.log(JSON.stringify(result));
 		  	$("#mercadolibre_result_error").show();
 		  	$("#mercadolibre_result_error_text").append(result+'<br />');
 		  }

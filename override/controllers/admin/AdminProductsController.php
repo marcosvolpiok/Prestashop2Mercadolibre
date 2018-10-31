@@ -127,7 +127,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $category = Tools::getValue('mercadolibre_category');
             foreach ($item as $itemId) {
                 if (Ml2presta::existsIdproduct($itemId)) { //Ya existe en DB
-                    $ml2presta = new Ml2presta(Ml2presta::exists_idproduct($itemId));
+                    $ml2presta = new Ml2presta(Ml2presta::existsIdProduct($itemId));
                     $ml2presta->id_ml_category=$category;
                     $ml2presta->update();
                 } else {
