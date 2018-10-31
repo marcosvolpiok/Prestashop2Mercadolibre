@@ -188,10 +188,14 @@ class Mercadolibre2prestashop extends Module
                 }
             }
         } else {
-            return '<p><a alt="'.$this->l('Login using Mercado Libre')
-            .'" class="btn" href="'
-            . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">'
-            .$this->l('Login using Mercado Libre').'</a></p>';
+            if($siteId){
+                return '<p><a alt="'.$this->l('Login using Mercado Libre')
+                .'" class="btn" href="'
+                . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">'
+                .$this->l('Login using Mercado Libre').'</a></p>';
+            }else{
+                return '<p>'.$this->l('Complete the configuration information (country field)').'</p>';
+            }
         }
         // /Autentificación API
 
