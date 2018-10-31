@@ -211,11 +211,29 @@ class Mercadolibre2prestashop extends Module
         Configuration::updateValue($prefijo.'_', null);
         // /Autentificación api
 
+        $arrPaises = array(
+            "MLA" => "Argentina",
+            "MLB" => "Brasil",
+            "MCO" => "Colombia",
+            "MCR" =>"Costa Rica",
+            "MEC" =>"Ecuador",
+            "MLC" =>"Chile" ,
+            "MLM" =>"Mexico",
+            "MLU" =>"Uruguay",
+            "MLV" =>"Venezuela" ,
+            "MPA" =>"Panama",
+            "MPE" =>"Peru" ,
+            "MPT" =>"Portugal" ,
+            "MRD" =>"Dominicana"            
+        );
+
         $this->context->smarty->assign(array(
             'module_dir' => $this->_path,
             'version' => $this->version,
             'url_base' => "//".Tools::getHttpHost(false).__PS_BASE_URI__,
             'config_general' => $this->renderConfigForms(),
+            'pais_seleccionado' => trim(Configuration::get($prefijo.'_PAIS')),
+            'paises' => $arrPaises,
         ));
         $output = $this->context->smarty->fetch($this->local_path.
         'views/templates/admin/configure.tpl');//recupero el template de configuracion
