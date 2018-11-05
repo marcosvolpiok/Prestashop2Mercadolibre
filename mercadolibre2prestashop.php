@@ -111,13 +111,13 @@ class Mercadolibre2prestashop extends Module
         
         
         // Sobreescitura
-        if (!file_Exists(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php")) {
-            mkdir(_PS_ROOT_DIR_ . "/override/controllers");
-            mkdir(_PS_ROOT_DIR_ . "/override/controllers/admin");
+        if (!file_Exists(_PS_ROOT_DIR_ . "/override_copy/controllers/admin/AdminProductsController.php")) {
+            mkdir(_PS_ROOT_DIR_ . "/override_copy/controllers");
+            mkdir(_PS_ROOT_DIR_ . "/override_copy/controllers/admin");
 
-            $arch=fopen(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php", "w");
+            $arch=fopen(_PS_ROOT_DIR_ . "/override_copy/controllers/admin/AdminProductsController.php", "w");
             fputs($arch, Tools::file_get_contents(dirname(__FILE__) .
-                "/override/controllers/admin/AdminProductsController.php"));
+                "/override_copy/controllers/admin/AdminProductsController.php"));
             fclose($arch);
         }
 
@@ -130,7 +130,13 @@ class Mercadolibre2prestashop extends Module
 
     public function uninstall()
     {
-        return parent::uninstall();
+        if (!parent::uninstall() || !$this->unregisterHook('displayAdminListAfter'))
+        {
+            return false;
+        }
+
+        return true;
+        
     }
     
 
