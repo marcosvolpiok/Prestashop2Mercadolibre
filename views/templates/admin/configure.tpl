@@ -43,7 +43,7 @@
 		{* $config_general *}
 		{* $config_general|escape:'htmlall':'UTF-8' *}
 
-<form id="module_form" class="defaultForm form-horizontal" action="#" method="post" enctype="multipart/form-data" novalidate> <input type="hidden" name="btnSubmitLogin" value="1" /> <div class="panel" id="fieldset_0"> <div class="panel-heading"> <i class="icon-cogs"></i> 
+<form id="module_form" class="defaultForm form-horizontal" action="#" method="post" enctype="multipart/form-data"> <input type="hidden" name="btnSubmitLogin" value="1" /> <div class="panel" id="fieldset_0"> <div class="panel-heading"> <i class="icon-cogs"></i> 
 {l s='Credentials' mod='mercadolibre2prestashop'} </div> <div class="form-wrapper"> <div class="form-group"> <label class="control-label col-lg-3 required"> 
 {l s='AppId' mod='mercadolibre2prestashop'} 
 </label> <div class="col-lg-9"> <input type="text" name="appId" id="appId" value="8168669721034782" class="" required="required" /> </div> </div> <div class="form-group"> <label class="control-label col-lg-3 required"> 
@@ -52,7 +52,7 @@
 {l s='Country' mod='mercadolibre2prestashop'}
  </label> <div class="col-lg-9">
 
-<select name="pais" class=" fixed-width-xl" id="pais" >
+<select name="pais" class=" fixed-width-xl" id="pais" required>
 	<option value="" {if !$pais_seleccionado}selected="selected"{/if} >
 	{l s='Select your country' mod='mercadolibre2prestashop'}
 	</option>
