@@ -22,6 +22,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+{if $submitForm!=''}
+	<div class="alert alert-success" role="alert">
+	  {l s='Success!' mod='mercadolibre2prestashop'}
+	</div>
+{/if}
+
 <div class="tab-content panel">	
 	<!-- Tab Configuracion -->
 	<div id="general">

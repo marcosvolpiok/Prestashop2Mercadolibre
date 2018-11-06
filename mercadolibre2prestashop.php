@@ -124,6 +124,22 @@ class Mercadolibre2prestashop extends Module
         // /Sobreesctitura
 
 
+
+
+        //Tab
+        /*
+        $parent_tab = new Tab();
+        $parent_tab->name = array();
+        foreach (Language::getLanguages(true) as $lang)
+            $parent_tab->name[1] = $this->l('example');
+
+        $parent_tab->class_name = 'AdminMlImport';
+        $parent_tab->id_parent = 0;
+        $parent_tab->module = $this->name;
+        $parent_tab->add();
+        */
+        // /Tab
+
         return parent::install() &&
                     $this->registerHook('displayAdminListAfter');
     }
@@ -246,6 +262,7 @@ class Mercadolibre2prestashop extends Module
             'config_general' => $this->renderConfigForms(),
             'pais_seleccionado' => trim(Configuration::get($prefijo.'_PAIS')),
             'paises' => $arrPaises,
+            'submitForm' => Tools::isSubmit('btnSubmitLogin')
         ));
         $output = $this->context->smarty->fetch($this->local_path.
         'views/templates/admin/configure.tpl');//recupero el template de configuracion
