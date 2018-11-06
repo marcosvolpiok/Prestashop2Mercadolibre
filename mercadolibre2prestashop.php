@@ -146,15 +146,13 @@ class Mercadolibre2prestashop extends Module
 
     public function uninstall()
     {
-        if (!parent::uninstall() || !$this->unregisterHook('displayAdminListAfter'))
-        {
+        if (!parent::uninstall() || !$this->unregisterHook('displayAdminListAfter')) {
             return false;
         }
 
         unlink(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php");
 
         return true;
-        
     }
     
 
@@ -212,12 +210,12 @@ class Mercadolibre2prestashop extends Module
                 }
             }
         } else {
-            if($siteId){
+            if ($siteId) {
                 return '<p><a alt="'.$this->l('Login using Mercado Libre')
                 .'" class="btn" href="'
                 . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">'
                 .$this->l('Login using Mercado Libre').'</a></p>';
-            }else{
+            } else {
                 return '<p>'.$this->l('Complete the configuration information (country field)').'</p>';
             }
         }
@@ -252,7 +250,7 @@ class Mercadolibre2prestashop extends Module
             "MPA" =>"Panama",
             "MPE" =>"Peru" ,
             "MPT" =>"Portugal" ,
-            "MRD" =>"Dominicana"            
+            "MRD" =>"Dominicana"
         );
 
         $this->context->smarty->assign(array(

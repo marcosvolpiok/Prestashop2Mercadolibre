@@ -96,7 +96,8 @@ class AdminProductsController extends AdminProductsControllerCore
                         array('access_token' => $this->context->cookie->access_token)
                     );
                 } catch (Exception $e) {
-                    $arrStatus["error"][] =  $this->l("There was an error creating the product: ").  $e->getMessage() . "\n";
+                    $arrStatus["error"][] =  $this->l(
+                        "There was an error creating the product: ").  $e->getMessage() . "\n";
                     die;
                 }
                     
