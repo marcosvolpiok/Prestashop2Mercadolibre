@@ -58,9 +58,9 @@
 	</option>
 
 	{foreach key=key item=pais from=$paises}
-		<option value="{$key}"
+		<option value="{$key|escape:'htmlall':'UTF-8'}"
 		{if $pais_seleccionado==$key}selected="selected"{/if}
-		 >{$pais}</option>
+		 >{$pais|escape:'htmlall':'UTF-8'}</option>
 	{/foreach}
 
 </select>
