@@ -101,6 +101,21 @@ class AdminMlImportController extends ModuleAdminController
         		$stock = new StockAvailable();
         		$stock->setQuantity($product->id, 0, (int)$result["body"]->available_quantity);
         		
+
+				$image = new Image();
+				$image->id_product = $product->id;
+				$image->position = Image::getHighestPosition($product->id) + 1;
+				$image->cover = true; // or false;
+				if (($image->validateFields(false, true)) === true &&
+				($image->validateFieldsLang(false, true)) === true && $image->add())
+				{
+					$shops = Shop::getShops(true, null, true); 
+				    $image->associateTo($shops);
+				    if (!self::copyImg($product->id, null, "http://mla-s1-p.mlstatic.com/605495-MLA27486697441_062018-O.jpg", 'products', false))
+				    {
+				        $image->delete();
+				    }
+				}        		
         	}
         	die;
         }		
