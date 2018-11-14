@@ -67,7 +67,7 @@
 
 <p class="help-block"> 
  {l s='Select the country with which you operate with MercadoLibre' mod='mercadolibre2prestashop'} 
-</p> </div> </div> </div><!-- /.form-wrapper --> <div class="panel-footer"> <button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitLogin" class="button"> <i class="process-icon-save"></i>  {l s='Save' mod='mercadolibre2prestashop'} </button> </div> </div> </form>
+</p> </div> </div> </div><!-- /.form-wrapper --> <div class="panel-footer"> <button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitLogin" class="btn btn-default pull-right"> <i class="process-icon-save"></i>  {l s='Save' mod='mercadolibre2prestashop'} </button> </div> </div> </form>
 
 
 	</div>
