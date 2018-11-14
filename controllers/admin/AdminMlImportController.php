@@ -82,7 +82,7 @@ class AdminMlImportController extends ModuleAdminController
     }
 
     public function __construct(){
-
+        require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/mercadolibre-php-sdk/Meli/meli.php');
 
 /*
 ?>
@@ -122,7 +122,11 @@ class AdminMlImportController extends ModuleAdminController
 		<?php
          */
 
-
+        $prefijo="MERCADOLIBRE2PRESTASHOP";
+        $appId = trim(Configuration::get($prefijo.'_APPID'));
+        $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
+        $meli = new Meli($appId, $secretKey);
+        $context=Context::getContext();
 
         if (Tools::getValue('post')=='true') {
         	echo "posttttttttttttt";
@@ -131,8 +135,10 @@ class AdminMlImportController extends ModuleAdminController
 
         	foreach(Tools::getValue('item') as $item){
         		echo $item;
+                $url = '/items/'.$item;
         		$result = $meli->get($url, array('access_token' => $context->cookie->access_token));
-        		print_r($result);
+        		//print_r($result);
+                //die;
 
         		
         		$product = new Product();

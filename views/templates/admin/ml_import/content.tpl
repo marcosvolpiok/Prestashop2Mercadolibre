@@ -1,21 +1,15 @@
 <form method="post" action="{$formAction}">
-	<input type="submit" />
+	{foreach from=$items item=item}
+		<img src="{$item.body->thumbnail}" alt="Imagen" />
+		<label id="item_{$item.body->id}">
+			<input for="item_{$item.body->id}" type="checkbox" name="item[]" value="{$item.body->id}" />
+			{$item.body->title} - {$item.body->currency_id}  {$item.body->price}
+		</label>
+		<br />
+	{/foreach}
+
+	{* idItems|@print_r *} 
+	{* $items|@print_r *} 
+
+	<input type="submit" value="Importar" />
 </form>
-
-
-{foreach from=$items item=item}
-	<img src="{$item.body->thumbnail}" alt="Imagen" /><br />
-	<input type="checkbox" name="item[]" value="{$item.body->id}" />
-	{$item.body->title} - {$item.body->currency_id}  {$item.body->price} 
-	<br />
-{/foreach}
-
-
-
-
-
-{$idItems|@print_r} 
-{$items|@print_r} 
-
-
-
