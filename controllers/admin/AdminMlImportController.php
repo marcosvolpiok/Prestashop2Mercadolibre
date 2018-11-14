@@ -99,7 +99,6 @@ class AdminMlImportController extends ModuleAdminController
         $context=Context::getContext();
 
         if (Tools::getValue('post')=='true') {
-        	echo "posttttttttttttt";
         	//Busca datos del producto en Mercadolibre
         	$default_lang = Configuration::get('PS_LANG_DEFAULT');
 
