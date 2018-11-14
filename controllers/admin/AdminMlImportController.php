@@ -61,8 +61,14 @@ class AdminMlImportController extends ModuleAdminController
 
         foreach($result["body"]->results as $item){
             // OBTENER INFO DE CADA ITEM
-            $url = '/items/'.$item; //get seller id
-            $itemResult[] = $meli->get($url, array('access_token' => $context->cookie->access_token));
+            $url = '/items/'.$item;
+            $itemResult[$item] = $meli->get($url, array('access_token' => $context->cookie->access_token));
+            
+            if (Ml2presta::existsMlProduct($item)) {
+                $itemResult[$item]['existe']=true;
+            } else {
+                $itemResult[$item]['existe']=false;
+            }
         }
 
 
@@ -83,44 +89,8 @@ class AdminMlImportController extends ModuleAdminController
 
     public function __construct(){
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/mercadolibre-php-sdk/Meli/meli.php');
+        require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
 
-/*
-?>
-		<form method="post" action="<?php echo $formAction; ?>">
-		<?php
-
-
-		foreach($result["body"]->results as $item){
-			// OBTENER INFO DE CADA ITEM
-			$url = '/items/'.$item; //get seller id
-			$result = $meli->get($url, array('access_token' => $context->cookie->access_token));
-			//print_R($result);
-			
-            //echo $result["body"]->id."<br />";
-			//echo $result["body"]->title."<br />";
-			//echo $result["body"]->currency_id."<br />";
-			//echo $result["body"]->price."<br />";
-			//echo $result["body"]->permalink."<br />";
-			//echo $result["body"]->secure_thumbnail."<br />";
-
-			echo '<a href="'.$result["body"]->permalink.'">
-			<!-- <img src="'.$result["body"]->secure_thumbnail.'" /> -->
-			'.$result["body"]->title.'<br />
-			'.$result["body"]->currency_id . ' ' . $result["body"]->price .'<br />
-
-			</a>
-			<input type="checkbox" name="item[]" value="'.$result["body"]->id.'" />
-			<br />';
-			
-
-		}
-       
-		?>
-		<input type="submit" />
-		</form>
-
-		<?php
-         */
 
         $prefijo="MERCADOLIBRE2PRESTASHOP";
         $appId = trim(Configuration::get($prefijo.'_APPID'));
@@ -140,6 +110,11 @@ class AdminMlImportController extends ModuleAdminController
         		//print_r($result);
                 //die;
 
+                if (Ml2presta::existsMlProduct($result["body"]->id)) {
+                    echo "producto ya existe en la db<br />";
+                    continue;
+                }
+
         		
         		$product = new Product();
         		$product->name= array((int)Configuration::get('PS_LANG_DEFAULT') => $result["body"]->title);
@@ -148,6 +123,10 @@ class AdminMlImportController extends ModuleAdminController
         		$product->quantity = (int)$result["body"]->available_quantity;
         		$product->add();
 
+                $ml2presta = new Ml2presta();
+                $ml2presta->id_product=$product->id;
+                $ml2presta->id_ml=$result["body"]->id;
+                $ml2presta->save();                
 
         		$stock = new StockAvailable();
         		$stock->setQuantity($product->id, 0, (int)$result["body"]->available_quantity);
