@@ -1,39 +1,69 @@
 <?php
 class AdminMlImportController extends ModuleAdminController
 {
-	public function __construct(){
-		echo $this->authMl();
-		$prefijo="MERCADOLIBRE2PRESTASHOP";
+
+    public function initContent()
+    {
+        parent::initContent();
+
+        $smarty = $this->context->smarty;
+
+
+
+
+        $productosBuscados = $this->buscarProductos();
+        $smarty->assign(array(
+            'formAction' => $productosBuscados['formAction'],
+            'idItems' => $productosBuscados['items'],
+            'items' => $productosBuscados['itemResult']
+        ));        
+        //print_R( $productosBuscados['items']);
+        //print_r($productosBuscados['itemResult']);
+        //var_dump(get_object_vars($productosBuscados['itemResult'][0]['body']));
+        //die;
+    }
+
+	
+
+    public function buscarProductos(){
+        echo $this->authMl();
+        $prefijo="MERCADOLIBRE2PRESTASHOP";
         $appId = trim(Configuration::get($prefijo.'_APPID'));
         $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
         $meli = new Meli($appId, $secretKey);
-    	$context=Context::getContext();
+        $context=Context::getContext();
 
-		$params = array();
-		/* ***** PARA OBTENER SELLER ID ***** */
-		$url = '/users/me'; //get seller id
-		$result = $meli->get($url, array('access_token' => $context->cookie->access_token)
-		);
-		$sellerId=$result["body"]->id;
-		//echo $result["body"]->id;
-		//echo "<br />";
-		print_r($result);
-		/* ***** / PARA OBTENER SELLER ID ***** */
-		
+        $params = array();
+        /* ***** PARA OBTENER SELLER ID ***** */
+        $url = '/users/me'; //get seller id
+        $result = $meli->get($url, array('access_token' => $context->cookie->access_token)
+        );
+        $sellerId=$result["body"]->id;
+        //echo $result["body"]->id;
+        //echo "<br />";
+        //print_r($result);
+        /* ***** / PARA OBTENER SELLER ID ***** */
+        
 
-		/** ****** OBTENER LISTADO DE ITEMS ***** */
-		$url = '/users/'.$sellerId.'/items/search'; //get seller id
-		$result = $meli->get($url, array('access_token' => $context->cookie->access_token, 'status' => 'active'));
-		//	/users/{Cust_id}/items/search?access_token=$ACCESS_TOKEN Retrieves user’s listings. GET 
-		//print_r( $result["body"]->results );
-		//print_r($result);
+        /** ****** OBTENER LISTADO DE ITEMS ***** */
+        $url = '/users/'.$sellerId.'/items/search'; //get seller id
+        $result = $meli->get($url, array('access_token' => $context->cookie->access_token, 'status' => 'active'));
+        //  /users/{Cust_id}/items/search?access_token=$ACCESS_TOKEN Retrieves user’s listings. GET 
+        //print_r( $result["body"]->results );
+        //print_r($result);
 
-		
-		/* devolvió: 
-		[0] => MLA706808097
-		[1] => MLA756013807
-		[2] => MLA756013804
-		*/                    
+        
+        /* devolvió: 
+        [0] => MLA706808097
+        [1] => MLA756013807
+        [2] => MLA756013804
+        */                    
+
+        foreach($result["body"]->results as $item){
+            // OBTENER INFO DE CADA ITEM
+            $url = '/items/'.$item; //get seller id
+            $itemResult[] = $meli->get($url, array('access_token' => $context->cookie->access_token));
+        }
 
 
         $link = new Link();
@@ -42,23 +72,37 @@ class AdminMlImportController extends ModuleAdminController
         .__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ]
         .'/'.$link->getAdminLink('AdminMlImport', true).'&post=true';
 
-		?>
 
+        $smarty = $this->context->smarty;
+        return array(
+            'formAction' => $formAction,
+            'items' => $result["body"]->results,
+            'itemResult' => $itemResult
+        );        
+    }
+
+    public function __construct(){
+
+
+/*
+?>
 		<form method="post" action="<?php echo $formAction; ?>">
 		<?php
+
+
 		foreach($result["body"]->results as $item){
-			/** ******* OBTENER INFO DE CADA ITEM */
+			// OBTENER INFO DE CADA ITEM
 			$url = '/items/'.$item; //get seller id
 			$result = $meli->get($url, array('access_token' => $context->cookie->access_token));
 			//print_R($result);
-			/*
-			echo $result["body"]->id."<br />";
-			echo $result["body"]->title."<br />";
-			echo $result["body"]->currency_id."<br />";
-			echo $result["body"]->price."<br />";
-			echo $result["body"]->permalink."<br />";
-			echo $result["body"]->secure_thumbnail."<br />";
-			*/
+			
+            //echo $result["body"]->id."<br />";
+			//echo $result["body"]->title."<br />";
+			//echo $result["body"]->currency_id."<br />";
+			//echo $result["body"]->price."<br />";
+			//echo $result["body"]->permalink."<br />";
+			//echo $result["body"]->secure_thumbnail."<br />";
+
 			echo '<a href="'.$result["body"]->permalink.'">
 			<!-- <img src="'.$result["body"]->secure_thumbnail.'" /> -->
 			'.$result["body"]->title.'<br />
@@ -70,12 +114,13 @@ class AdminMlImportController extends ModuleAdminController
 			
 
 		}
+       
 		?>
 		<input type="submit" />
 		</form>
 
 		<?php
-
+         */
 
 
 
@@ -117,8 +162,11 @@ class AdminMlImportController extends ModuleAdminController
 				    }
 				}        		
         	}
-        	die;
-        }		
+        	//die;
+        }
+
+
+        return parent::__construct();		
 	}
 
 
