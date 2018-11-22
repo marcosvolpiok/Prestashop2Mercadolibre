@@ -26,7 +26,8 @@ class AdminMlImportController extends ModuleAdminController
 	
 
     public function buscarProductos(){
-        echo $this->authMl();
+        $this->authMl();
+
         $prefijo="MERCADOLIBRE2PRESTASHOP";
         $appId = trim(Configuration::get($prefijo.'_APPID'));
         $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
@@ -175,33 +176,25 @@ class AdminMlImportController extends ModuleAdminController
         $redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST']
         .__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ]
         .'/'.$link->getAdminLink('AdminMlImport', true).'&post=true';
-        /*
-                echo "traza 1";
-                echo '<pre>';
-                print_r($_SESSION);
-                echo '</pre>';
-        */
+
         $meli = new Meli($appId, $secretKey);
         if (Tools::getValue('code') || $context->cookie->access_token) {
             // If code exist and session is empty
             if (Tools::getValue('code') && !($context->cookie->access_token)) {
-                echo "access_token: (".$context->cookie->access_token.")";
+               // echo "access_token: (".$context->cookie->access_token.")";
 
                 // If the code was in get parameter we authorize
                	$user = $meli->authorize(Tools::getValue('code'), $redirectURI);
-                //print_r($user);
 
 
                 // Now we create the sessions with the authenticated user
                 $context->cookie->access_token = $user['body']->access_token;
                 $context->cookie->expires_in = time() + $user['body']->expires_in;
                 $context->cookie->refresh_token = $user['body']->refresh_token;
-                echo "sesión vacía";	
             } else {
                 // We can check if the access token in invalid checking the time
                 if ($context->cookie->expires_in < time()) {
                     try {
-                    	echo "refresca código";
                         // Make the refresh proccess
                         $meli->refreshAccessToken();
 
@@ -210,7 +203,6 @@ class AdminMlImportController extends ModuleAdminController
                         $context->cookie->expires_in = time() + $user['body']->expires_in;
                         $context->cookie->refresh_token = $user['body']->refresh_token;
 
-                        //echo "Redireccionar a esta misma URL";
                         Tools::redirect("$redirectURI");
                         die;
                     } catch (Exception $e) {
@@ -220,10 +212,7 @@ class AdminMlImportController extends ModuleAdminController
             }
         } else {
             if ($siteId) {
-                return '<p><a alt="'.$this->l('Login using Mercado Libre')
-                .'" class="btn" href="'
-                . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]) . '">'
-                .$this->l('Login using Mercado Libre').'</a></p>';
+                header('location: ' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]));
             } else {
                 return '<p>'.$this->l('Complete the configuration information (country field)').'</p>';
             }
