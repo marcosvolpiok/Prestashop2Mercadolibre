@@ -158,7 +158,7 @@ class Mercadolibre2prestashop extends Module
 
     public function hookDisplayAdminListAfter()
     {
-        if(Tools::getValue('controller')!='AdminProducts'){
+        if (Tools::getValue('controller')!='AdminProducts') {
             return;
         }
 
