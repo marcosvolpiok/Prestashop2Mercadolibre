@@ -15,5 +15,5 @@
 	{* idItems|@print_r *} 
 	{* $items|@print_r *} 
 
-	<input type="submit" value="{l s='Import' mod='mercadolibre2prestashop'}" />
+	<input type="submit" value="{l s='Create CSV' mod='mercadolibre2prestashop'}" />
 </form>
