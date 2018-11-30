@@ -1,5 +1,5 @@
 <?php
-class AdminMlImportController extends ModuleAdminController
+class AdminMlGenerateCsvController extends ModuleAdminController
 {
 
     public function initContent()
@@ -12,6 +12,7 @@ class AdminMlImportController extends ModuleAdminController
 
 
         $productosBuscados = $this->buscarProductos();
+
         $smarty->assign(array(
             'formAction' => $productosBuscados['formAction'],
             'idItems' => $productosBuscados['items'],
@@ -77,7 +78,7 @@ class AdminMlImportController extends ModuleAdminController
         $arrAdminDir = explode("/", PS_ADMIN_DIR);
         $formAction = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST']
         .__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ]
-        .'/'.$link->getAdminLink('AdminMlImport', true).'&post=true';
+        .'/'.$link->getAdminLink('AdminMlGenerateCsv', true).'&post=true';
 
 
         $smarty = $this->context->smarty;
@@ -103,51 +104,37 @@ class AdminMlImportController extends ModuleAdminController
         	//Busca datos del producto en Mercadolibre
         	$default_lang = Configuration::get('PS_LANG_DEFAULT');
 
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename=data.csv');
+            echo "sku;title;description;price;quantity;images\n";
+
         	foreach(Tools::getValue('item') as $item){
-        		echo $item;
+                //echo $result["body"]->id.";".$result["body"]->title.";".$result["body"]->title.";".$result["body"]->price.";".$result["body"]->available_quantity;
+
+
+                
+        		//echo $item;
                 $url = '/items/'.$item;
         		$result = $meli->get($url, array('access_token' => $context->cookie->access_token));
         		//print_r($result);
                 //die;
 
-                if (Ml2presta::existsMlProduct($result["body"]->id)) {
-                    echo "producto ya existe en la db<br />";
-                    continue;
+                //echo "<pre>";
+                //print_r($result["body"]->pictures);
+                //print_r($result);
+
+                $imag=array();
+                foreach($result["body"]->pictures as $pic){
+                    $imag[]=$pic->secure_url;
                 }
 
-        		
-        		$product = new Product();
-        		$product->name= array((int)Configuration::get('PS_LANG_DEFAULT') => $result["body"]->title);
-        		$product->price= $result["body"]->price;
-        		$product->link_rewrite=array((int)Configuration::get('PS_LANG_DEFAULT') =>  'test-importu');
-        		$product->quantity = (int)$result["body"]->available_quantity;
-        		$product->add();
 
-                $ml2presta = new Ml2presta();
-                $ml2presta->id_product=$product->id;
-                $ml2presta->id_ml=$result["body"]->id;
-                $ml2presta->save();                
-
-        		$stock = new StockAvailable();
-        		$stock->setQuantity($product->id, 0, (int)$result["body"]->available_quantity);
-        		
-
-				$image = new Image();
-				$image->id_product = $product->id;
-				$image->position = Image::getHighestPosition($product->id) + 1;
-				$image->cover = true; // or false;
-				if (($image->validateFields(false, true)) === true &&
-				($image->validateFieldsLang(false, true)) === true && $image->add())
-				{
-					$shops = Shop::getShops(true, null, true); 
-				    $image->associateTo($shops);
-				    if (!self::copyImg($product->id, null, "http://mla-s1-p.mlstatic.com/605495-MLA27486697441_062018-O.jpg", 'products', false))
-				    {
-				        $image->delete();
-				    }
-				}        		
+                
+                //echo "imag: " . implode(",", $imag);
+                echo $result["body"]->id.";".$result["body"]->title.";".$result["body"]->title.";".$result["body"]->price.";".$result["body"]->available_quantity . ";" . implode(",", $imag)."\n";
+  		  
         	}
-        	//die;
+        	die;
         }
 
 
