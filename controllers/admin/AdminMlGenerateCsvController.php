@@ -65,12 +65,6 @@ class AdminMlGenerateCsvController extends ModuleAdminController
             // OBTENER INFO DE CADA ITEM
             $url = '/items/'.$item;
             $itemResult[$item] = $meli->get($url, array('access_token' => $context->cookie->access_token));
-            
-            if (Ml2presta::existsMlProduct($item)) {
-                $itemResult[$item]['existe']=true;
-            } else {
-                $itemResult[$item]['existe']=false;
-            }
         }
 
 
