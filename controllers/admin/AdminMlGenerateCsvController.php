@@ -1,4 +1,29 @@
 <?php
+/**
+* 2007-2015 PrestaShop
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+* versions in the future. If you wish to customize PrestaShop for your
+* needs please refer to http://www.prestashop.com for more information.
+*
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2015 PrestaShop SA
+*  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  International Registered Trademark & Property of PrestaShop SA
+*/
+
 class AdminMlGenerateCsvController extends ModuleAdminController
 {
     public function initContent()
@@ -35,7 +60,6 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         $meli = new Meli($appId, $secretKey);
         $context=Context::getContext();
 
-        $params = array();
         /* ***** PARA OBTENER SELLER ID ***** */
         $url = '/users/me'; //get seller id
         $result = $meli->get(
@@ -63,6 +87,7 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         [2] => MLA756013804
         */
 
+        $itemResult = array();
         foreach ($result["body"]->results as $item) {
             // OBTENER INFO DE CADA ITEM
             $url = '/items/'.$item;
@@ -76,8 +101,6 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         .__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ]
         .'/'.$link->getAdminLink('AdminMlGenerateCsv', true).'&post=true';
 
-
-        $smarty = $this->context->smarty;
         return array(
             'formAction' => $formAction,
             'items' => $result["body"]->results,
@@ -99,8 +122,6 @@ class AdminMlGenerateCsvController extends ModuleAdminController
 
         if (Tools::getValue('post')=='true') {
             //Busca datos del producto en Mercadolibre
-            $default_lang = Configuration::get('PS_LANG_DEFAULT');
-
             header('Content-Type: text/csv; charset=utf-8');
             header('Content-Disposition: attachment; filename=data.csv');
             echo "sku;title;description;price;quantity;images\n";
@@ -114,7 +135,10 @@ class AdminMlGenerateCsvController extends ModuleAdminController
                     $imag[]=$pic->secure_url;
                 }
                 
-                echo $result["body"]->id.";".$result["body"]->title.";".$result["body"]->title.";".$result["body"]->price.";".$result["body"]->available_quantity . ";" . implode(",", $imag)."\n";
+                echo $result["body"]->id.";".$result["body"]->title.";"
+                .$result["body"]->title.";".$result["body"]->price
+                .";".$result["body"]->available_quantity . ";"
+                . implode(",", $imag)."\n";
             }
             die;
         }
@@ -180,7 +204,7 @@ class AdminMlGenerateCsvController extends ModuleAdminController
             }
         } else {
             if ($siteId) {
-                header('location: ' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]));
+                Tools::redirect('location: ' . $meli->getAuthUrl($redirectURI, Meli::$AUTH_URL[$siteId]));
             } else {
                 return '<p>'.$this->l('Complete the configuration information (country field)').'</p>';
             }

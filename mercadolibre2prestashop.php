@@ -127,9 +127,7 @@ class Mercadolibre2prestashop extends Module
         //Tab
         $parent_tab = new Tab();
         $parent_tab->name = array();
-        foreach (Language::getLanguages(true) as $lang) {
             $parent_tab->name[1] = $this->l('Import from Mercado Libre');
-        }
 
         $parent_tab->class_name = 'AdminMlGenerateCsv';
         $parent_tab->id_parent = 0;
