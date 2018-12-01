@@ -41,8 +41,8 @@ class Mercadolibre2prestashop extends Module
         //acerca del modulo en si
         $this->name = 'mercadolibre2prestashop';
         $this->tab = 'administration';
-        $this->version = '1.0.0';
-        $this->author = 'Marcosvolpi.com';
+        $this->version = '1.1.0';
+        $this->author = 'Marcos volpi';
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
         $this->module_key = '2790f66e5d1b812c247ebf44d6447b37';
@@ -162,6 +162,10 @@ class Mercadolibre2prestashop extends Module
 
     public function hookDisplayAdminListAfter()
     {
+        if (Tools::getValue('controller')!='AdminProducts') {
+            return;
+        }
+
         // Autentificación API
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/mercadolibre-php-sdk/Meli/meli.php');
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');

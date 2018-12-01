@@ -56,7 +56,8 @@ class AdminProductsController extends AdminProductsControllerCore
     {
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/mercadolibre-php-sdk/Meli/meli.php');
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
-        $arrStatus=[];
+        $arrStatus=array();
+
 
         $prefijo="MERCADOLIBRE2PRESTASHOP";
         $appId = trim(Configuration::get($prefijo.'_APPID'));
