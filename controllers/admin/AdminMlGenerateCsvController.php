@@ -1,7 +1,6 @@
 <?php
 class AdminMlGenerateCsvController extends ModuleAdminController
 {
-
     public function initContent()
     {
         parent::initContent();
@@ -17,16 +16,17 @@ class AdminMlGenerateCsvController extends ModuleAdminController
             'formAction' => $productosBuscados['formAction'],
             'idItems' => $productosBuscados['items'],
             'items' => $productosBuscados['itemResult']
-        ));        
+        ));
         //print_R( $productosBuscados['items']);
         //print_r($productosBuscados['itemResult']);
         //var_dump(get_object_vars($productosBuscados['itemResult'][0]['body']));
         //die;
     }
 
-	
+    
 
-    public function buscarProductos(){
+    public function buscarProductos()
+    {
         $this->authMl();
 
         $prefijo="MERCADOLIBRE2PRESTASHOP";
@@ -38,7 +38,9 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         $params = array();
         /* ***** PARA OBTENER SELLER ID ***** */
         $url = '/users/me'; //get seller id
-        $result = $meli->get($url, array('access_token' => $context->cookie->access_token)
+        $result = $meli->get(
+            $url,
+            array('access_token' => $context->cookie->access_token)
         );
         $sellerId=$result["body"]->id;
         //echo $result["body"]->id;
@@ -50,18 +52,18 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         /** ****** OBTENER LISTADO DE ITEMS ***** */
         $url = '/users/'.$sellerId.'/items/search'; //get seller id
         $result = $meli->get($url, array('access_token' => $context->cookie->access_token, 'status' => 'active'));
-        //  /users/{Cust_id}/items/search?access_token=$ACCESS_TOKEN Retrieves user’s listings. GET 
+        //  /users/{Cust_id}/items/search?access_token=$ACCESS_TOKEN Retrieves user’s listings. GET
         //print_r( $result["body"]->results );
         //print_r($result);
 
         
-        /* devolvió: 
+        /* devolvió:
         [0] => MLA706808097
         [1] => MLA756013807
         [2] => MLA756013804
-        */                    
+        */
 
-        foreach($result["body"]->results as $item){
+        foreach ($result["body"]->results as $item) {
             // OBTENER INFO DE CADA ITEM
             $url = '/items/'.$item;
             $itemResult[$item] = $meli->get($url, array('access_token' => $context->cookie->access_token));
@@ -80,10 +82,11 @@ class AdminMlGenerateCsvController extends ModuleAdminController
             'formAction' => $formAction,
             'items' => $result["body"]->results,
             'itemResult' => $itemResult
-        );        
+        );
     }
 
-    public function __construct(){
+    public function __construct()
+    {
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/vendor/mercadolibre-php-sdk/Meli/meli.php');
         require_once(_PS_ROOT_DIR_ . '/modules/mercadolibre2prestashop/classes/Ml2presta.php');
 
@@ -95,38 +98,36 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         $context=Context::getContext();
 
         if (Tools::getValue('post')=='true') {
-        	//Busca datos del producto en Mercadolibre
-        	$default_lang = Configuration::get('PS_LANG_DEFAULT');
+            //Busca datos del producto en Mercadolibre
+            $default_lang = Configuration::get('PS_LANG_DEFAULT');
 
             header('Content-Type: text/csv; charset=utf-8');
             header('Content-Disposition: attachment; filename=data.csv');
             echo "sku;title;description;price;quantity;images\n";
 
-        	foreach(Tools::getValue('item') as $item){
+            foreach (Tools::getValue('item') as $item) {
                 $url = '/items/'.$item;
-        		$result = $meli->get($url, array('access_token' => $context->cookie->access_token));
+                $result = $meli->get($url, array('access_token' => $context->cookie->access_token));
 
                 $imag=array();
-                foreach($result["body"]->pictures as $pic){
+                foreach ($result["body"]->pictures as $pic) {
                     $imag[]=$pic->secure_url;
                 }
                 
                 echo $result["body"]->id.";".$result["body"]->title.";".$result["body"]->title.";".$result["body"]->price.";".$result["body"]->available_quantity . ";" . implode(",", $imag)."\n";
-  		  
-        	}
-        	die;
+            }
+            die;
         }
 
 
-        return parent::__construct();		
-	}
+        return parent::__construct();
+    }
 
 
 
     public function authMl()
     {
-
-    	$context=Context::getContext();
+        $context=Context::getContext();
 
 
         // Autentificación API
@@ -148,10 +149,10 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         if (Tools::getValue('code') || $context->cookie->access_token) {
             // If code exist and session is empty
             if (Tools::getValue('code') && !($context->cookie->access_token)) {
-               // echo "access_token: (".$context->cookie->access_token.")";
+                // echo "access_token: (".$context->cookie->access_token.")";
 
                 // If the code was in get parameter we authorize
-               	$user = $meli->authorize(Tools::getValue('code'), $redirectURI);
+                $user = $meli->authorize(Tools::getValue('code'), $redirectURI);
 
 
                 // Now we create the sessions with the authenticated user
@@ -185,7 +186,5 @@ class AdminMlGenerateCsvController extends ModuleAdminController
             }
         }
         // /Autentificación API
-
     }
-    
 }

@@ -94,5 +94,5 @@ class Ml2Presta extends ObjectModel
         $res=Db::getInstance()->executeS($query);
 
         return $res[0]["id_ml2presta"];
-    }    
+    }
 }
