@@ -103,28 +103,14 @@ class AdminMlGenerateCsvController extends ModuleAdminController
             echo "sku;title;description;price;quantity;images\n";
 
         	foreach(Tools::getValue('item') as $item){
-                //echo $result["body"]->id.";".$result["body"]->title.";".$result["body"]->title.";".$result["body"]->price.";".$result["body"]->available_quantity;
-
-
-                
-        		//echo $item;
                 $url = '/items/'.$item;
         		$result = $meli->get($url, array('access_token' => $context->cookie->access_token));
-        		//print_r($result);
-                //die;
-
-                //echo "<pre>";
-                //print_r($result["body"]->pictures);
-                //print_r($result);
 
                 $imag=array();
                 foreach($result["body"]->pictures as $pic){
                     $imag[]=$pic->secure_url;
                 }
-
-
                 
-                //echo "imag: " . implode(",", $imag);
                 echo $result["body"]->id.";".$result["body"]->title.";".$result["body"]->title.";".$result["body"]->price.";".$result["body"]->available_quantity . ";" . implode(",", $imag)."\n";
   		  
         	}
@@ -156,7 +142,7 @@ class AdminMlGenerateCsvController extends ModuleAdminController
         $arrAdminDir = explode("/", PS_ADMIN_DIR);
         $redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST']
         .__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ]
-        .'/'.$link->getAdminLink('AdminMlImport', true).'&post=true';
+        .'/'.$link->getAdminLink('AdminMlGenerateCsv', true);
 
         $meli = new Meli($appId, $secretKey);
         if (Tools::getValue('code') || $context->cookie->access_token) {
