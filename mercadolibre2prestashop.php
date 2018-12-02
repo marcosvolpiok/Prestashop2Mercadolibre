@@ -41,7 +41,8 @@ class Mercadolibre2prestashop extends Module
         //acerca del modulo en si
         $this->name = 'mercadolibre2prestashop';
         $this->tab = 'administration';
-        $this->version = '1.1.0';
+        $this->version = '1.1.1';
+
         $this->author = 'Marcos volpi';
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
@@ -242,6 +243,8 @@ class Mercadolibre2prestashop extends Module
         //Autentificación api
         $prefijo = 'MERCADOLIBRE2PRESTASHOP';
         Configuration::updateValue($prefijo.'_', null);
+        $appId = trim(Configuration::get($prefijo.'_APPID'));
+        $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));        
         // /Autentificación api
 
         $arrPaises = array(
@@ -267,6 +270,8 @@ class Mercadolibre2prestashop extends Module
             'config_general' => $this->renderConfigForms(),
             'pais_seleccionado' => trim(Configuration::get($prefijo.'_PAIS')),
             'paises' => $arrPaises,
+            'appId' => $appId,
+            'secretKey' => $secretKey,
             'submitForm' => Tools::isSubmit('btnSubmitLogin')
         ));
         $output = $this->context->smarty->fetch($this->local_path.
