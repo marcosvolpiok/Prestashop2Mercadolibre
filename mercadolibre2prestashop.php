@@ -240,7 +240,7 @@ class Mercadolibre2prestashop extends Module
         $prefijo = 'MERCADOLIBRE2PRESTASHOP';
         Configuration::updateValue($prefijo.'_', null);
         $appId = trim(Configuration::get($prefijo.'_APPID'));
-        $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));        
+        $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
         // /Autentificación api
 
         $arrPaises = array(
