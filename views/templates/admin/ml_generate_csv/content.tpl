@@ -23,14 +23,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<form method="post" action="{$formAction |escape:'htmlall':'UTF-8'}">
+<form method="post" action="{$formAction|escape:'htmlall':'UTF-8'}">
 	{foreach from=$items item=item}
-		<img src="{$item.body->thumbnail |escape:'htmlall':'UTF-8'}" alt="Imagen" />
-		<label id="item_{$item.body->id |escape:'htmlall':'UTF-8'}">
-			<input for="item_{$item.body->id |escape:'htmlall':'UTF-8'}" type="checkbox" name="item[]" value="{$item.body->id |escape:'htmlall':'UTF-8'}"
+		<img src="{$item.body->thumbnail|escape:'htmlall':'UTF-8'}" alt="Imagen" />
+		<label id="item_{$item.body->id|escape:'htmlall':'UTF-8'}">
+			<input for="item_{$item.body->id|escape:'htmlall':'UTF-8'}" type="checkbox" name="item[]" value="{$item.body->id|escape:'htmlall':'UTF-8'}"
 
 			 />
-			{$item.body->title |escape:'htmlall':'UTF-8'} - {$item.body->currency_id |escape:'htmlall':'UTF-8'}  {$item.body->price |escape:'htmlall':'UTF-8'}
+			{$item.body->title|escape:'htmlall':'UTF-8'} - {$item.body->currency_id|escape:'htmlall':'UTF-8'}  {$item.body->price|escape:'htmlall':'UTF-8'}
 		</label>
 		<br />
 	{/foreach}
