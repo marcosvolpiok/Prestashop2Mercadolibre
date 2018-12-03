@@ -211,7 +211,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
         $producCategory=Ml2presta::getCategoryByIdProduct($idProduct);
         $item = array(
-                    "title" => $prod->name[1],
+                    "title" => $prod->name[Configuration::get('PS_LANG_DEFAULT')],
                     "category_id" => $producCategory,
                     "price" => str_replace(",", "", number_Format($prod->price, 2)),
                     "currency_id" => "ARS",
@@ -221,7 +221,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     "condition" => "new",
                     "description" =>
                         array(
-                            "plain_text" => strip_tags($prod->description[1])
+                            "plain_text" => strip_tags($prod->description[Configuration::get('PS_LANG_DEFAULT')])
                         ),
                     "warranty" => "12 month",
                     "pictures" => $arrImageUrl
