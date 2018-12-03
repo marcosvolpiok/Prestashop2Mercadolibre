@@ -173,7 +173,14 @@ class Mercadolibre2prestashop extends Module
 
         $link = new Link();
         $arrAdminDir = explode("/", PS_ADMIN_DIR);
-        $redirectURI = $_SERVER['REQUEST_SCHEME'] . '://'.$_SERVER['HTTP_HOST']
+
+        if (!empty($_SERVER['HTTPS'])) {
+            $protocol = 'https';
+        } else {
+            $protocol = 'http';
+        }
+         
+        $redirectURI = $protocol . '://'.$_SERVER['HTTP_HOST']
         .__PS_BASE_URI__.$arrAdminDir[ count($arrAdminDir) - 1 ]
         .'/'.$link->getAdminLink('AdminProducts', true).'&authFin=true';
         /*
