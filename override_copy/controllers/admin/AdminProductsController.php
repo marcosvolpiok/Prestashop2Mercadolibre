@@ -192,7 +192,7 @@ class AdminProductsController extends AdminProductsControllerCore
     public function createItemArray($idProduct)
     {
         $prod = new Product((int) $idProduct);
-        $image = Image::getImages(1, $idProduct);
+        $image = Image::getImages(Configuration::get('PS_LANG_DEFAULT'), $idProduct);
         $arrImageUrl= array();
         $i=0;
                 
