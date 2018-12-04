@@ -91,6 +91,10 @@
 				{/foreach}
 			</select>
 			
+			<p class="help-block"> 
+			 {l s='If not selected then uses the Image Type more width' mod='mercadolibre2prestashop'} 
+			</p>
+
 			<div class="panel-footer">
 				<button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitImage" class="btn btn-default pull-right">
 					<i class="process-icon-save"></i>  {l s='Save' mod='mercadolibre2prestashop'}

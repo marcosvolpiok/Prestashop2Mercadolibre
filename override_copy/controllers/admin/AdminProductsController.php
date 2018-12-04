@@ -205,7 +205,16 @@ class AdminProductsController extends AdminProductsControllerCore
             $imageType = new ImageType($imageTypeSelected);
             $nombreImageType = $imageType->name;
         } else {
-            $nombreImageType = "";
+            //Busca la imagen más grande entre todas
+            $imagesType = ImageType::getImagesTypes('products');
+            foreach($imagesType as $imagType){
+                $imagOb = new ImageType($imagType['id_image_type']);
+                if ($imagOb->width > $ultImagWidth){
+                    $ultImagWidth = $imagOb->width;
+                    $ultImagObj = $imagType['id_image_type'];
+                }
+            }
+            $nombreImageType = $ultImagObj->name;
         }
 
                 
