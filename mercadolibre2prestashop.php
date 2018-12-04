@@ -297,11 +297,12 @@ class Mercadolibre2prestashop extends Module
                     Mercadolibre2prestashop\Formulario::getLoginCredenciales()
                 )
             );
-        } elseif(Tools::isSubmit('btnSubmitImage')) {
+        } elseif (Tools::isSubmit('btnSubmitImage')) {
             //echo "submit image" . Tools::getValue('imageType');
             //die;
 
-            \Configuration::updateValue($this->getPrefijo('PREFIJO_CONFIG').'_'.\Tools::strtoupper('imageType'), Tools::getValue('imageType'));
+            \Configuration::updateValue($this->getPrefijo('PREFIJO_CONFIG').'_'
+                .\Tools::strtoupper('imageType'), Tools::getValue('imageType'));
         }
     }
 

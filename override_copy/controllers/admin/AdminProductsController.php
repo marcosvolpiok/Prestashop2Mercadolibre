@@ -199,8 +199,7 @@ class AdminProductsController extends AdminProductsControllerCore
         //Search image type
         $prefijo = 'MERCADOLIBRE2PRESTASHOP';
         $imageTypeSelected = trim(Configuration::get($prefijo.'_IMAGETYPE'));
-        if (!empty( $imageTypeSelected ))
-        {
+        if (!empty($imageTypeSelected)) {
             //Busca nombre
             $imageType = new ImageType($imageTypeSelected);
             $nombreImageType = $imageType->name;
@@ -208,9 +207,9 @@ class AdminProductsController extends AdminProductsControllerCore
             //Busca la imagen más grande entre todas
             $imagesType = ImageType::getImagesTypes('products');
             $ultImagWidth = 0;
-            foreach($imagesType as $imagType){
+            foreach ($imagesType as $imagType) {
                 $imagOb = new ImageType($imagType['id_image_type']);
-                if ($imagOb->width > $ultImagWidth){
+                if ($imagOb->width > $ultImagWidth) {
                     $ultImagWidth = $imagOb->width;
                     $ultImagObj = $imagType['id_image_type'];
                 }
