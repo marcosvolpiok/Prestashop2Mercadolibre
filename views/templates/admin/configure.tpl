@@ -81,6 +81,7 @@
 			</div>
 
 			<select name="imageType" class=" fixed-width-xl">
+				<option>{l s='Select size' mod='mercadolibre2prestashop'}</option>
 				{foreach item=type from=$imagesTypes}
 					<option value="{$type.id_image_type|escape:'htmlall':'UTF-8'}"
 					{if $type.id_image_type == $imageTypeSelected}
@@ -88,8 +89,6 @@
 					{/if}
 					>{$type.name|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
-
-				<option value="value content">descripcion</option>
 			</select>
 			
 			<div class="panel-footer">
