@@ -277,7 +277,7 @@ class Mercadolibre2prestashop extends Module
             'paises' => $arrPaises,
             'appId' => $appId,
             'secretKey' => $secretKey,
-            'imagesTypes' => ImageType::getImagesTypes(),
+            'imagesTypes' => ImageType::getImagesTypes('products'),
             'imageTypeSelected' => $imageTypeSelected,
             'submitForm' => Tools::isSubmit('btnSubmitLogin')
         ));
