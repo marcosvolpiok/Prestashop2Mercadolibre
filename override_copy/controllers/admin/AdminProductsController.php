@@ -39,8 +39,8 @@ class AdminProductsController extends AdminProductsControllerCore
     public function __construct()
     {
         $this->_join = '
-		LEFT JOIN `'._DB_PREFIX_.'ml2presta` ml ON (ml.`id_product` = a.`id_product`)
-		';
+        LEFT JOIN `'._DB_PREFIX_.'ml2presta` ml ON (ml.`id_product` = a.`id_product`)
+        ';
         $this->_select = 'ml.`id_ml`, ';
         parent::__construct();
         $this->fields_list['id_ml'] = array(
@@ -195,6 +195,19 @@ class AdminProductsController extends AdminProductsControllerCore
         $image = Image::getImages(Configuration::get('PS_LANG_DEFAULT'), $idProduct);
         $arrImageUrl= array();
         $i=0;
+
+        //Search image type
+        $prefijo = 'MERCADOLIBRE2PRESTASHOP';
+        $imageTypeSelected = trim(Configuration::get($prefijo.'_IMAGETYPE'));
+        if (!empty( $imageTypeSelected ))
+        {
+            //Busca nombre
+            $imageType = new ImageType($imageTypeSelected);
+            $nombreImageType = $imageType->name;
+        } else {
+            $nombreImageType = "";
+        }
+
                 
         foreach ($image as $img) {
             $i++;
@@ -203,7 +216,8 @@ class AdminProductsController extends AdminProductsControllerCore
             }
                                         
             $link = new Link();
-            $imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], ImageType::getFormatedName('home'));
+            $imageUrl = $link->getImageLink($prod->link_rewrite, $img['id_image'], $nombreImageType);
+
             $arrImageUrl[] =
                         array(
                             "source" => $imageUrl
