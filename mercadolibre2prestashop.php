@@ -253,6 +253,8 @@ class Mercadolibre2prestashop extends Module
         Configuration::updateValue($prefijo.'_', null);
         $appId = trim(Configuration::get($prefijo.'_APPID'));
         $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
+        $imageTypeSelected = trim(Configuration::get($prefijo.'_IMAGETYPE'));
+        
         // /Autentificación api
 
         $arrPaises = array(
@@ -280,6 +282,8 @@ class Mercadolibre2prestashop extends Module
             'paises' => $arrPaises,
             'appId' => $appId,
             'secretKey' => $secretKey,
+            'imagesTypes' => ImageType::getImagesTypes('products'),
+            'imageTypeSelected' => $imageTypeSelected,
             'submitForm' => Tools::isSubmit('btnSubmitLogin')
         ));
         $output = $this->context->smarty->fetch($this->local_path.
@@ -298,6 +302,12 @@ class Mercadolibre2prestashop extends Module
                     Mercadolibre2prestashop\Formulario::getLoginCredenciales()
                 )
             );
+        } elseif (Tools::isSubmit('btnSubmitImage')) {
+            //echo "submit image" . Tools::getValue('imageType');
+            //die;
+
+            \Configuration::updateValue($this->getPrefijo('PREFIJO_CONFIG').'_'
+                .\Tools::strtoupper('imageType'), Tools::getValue('imageType'));
         }
     }
 
