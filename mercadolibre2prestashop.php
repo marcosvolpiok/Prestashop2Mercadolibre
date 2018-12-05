@@ -232,6 +232,11 @@ class Mercadolibre2prestashop extends Module
         }
         // /Autentificación API
 
+
+        $this->context->smarty->assign(array(
+            'pais_seleccionado' => trim(Configuration::get($prefijo.'_PAIS')),
+        ));
+
         return $this->display(__FILE__, 'views/templates/admin/hook-display-admin.tpl');
     }
     

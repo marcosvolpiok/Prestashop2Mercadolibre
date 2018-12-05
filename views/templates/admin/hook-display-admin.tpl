@@ -74,7 +74,7 @@
 
 	$.ajax({
 		type: 'GET',
-		url: 'https://api.mercadolibre.com/sites/MLA/categories',
+		url: 'https://api.mercadolibre.com/sites/{$pais_seleccionado|escape:'htmlall':'UTF-8'}/categories',
 		success: function(data){
 			$( ".result" ).html( data );
 			$("#mercadolibre_id_categ").append('<option value="">{l s='Select category' mod='mercadolibre2prestashop'}</option>');
