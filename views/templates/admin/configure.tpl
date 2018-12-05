@@ -48,11 +48,13 @@
 	<div class="panel" id="fieldset_0"> <div class="panel-heading"> <i class="icon-cogs"></i> 
 {l s='Credentials' mod='mercadolibre2prestashop'} </div> <div class="form-wrapper"> <div class="form-group"> <label class="control-label col-lg-3 required"> 
 {l s='AppId' mod='mercadolibre2prestashop'} 
+
 </label> <div class="col-lg-9"> <input type="text" name="appId" id="appId" value="{$appId|escape:'htmlall':'UTF-8'}" class="" required="required" /> </div> </div> <div class="form-group"> <label class="control-label col-lg-3 required"> 
 {l s='SecretKey' mod='mercadolibre2prestashop'} 
-</label> <div class="col-lg-9"> <input type="text" name="secretKey" id="secretKey" value="{$secretKey|escape:'htmlall':'UTF-8'}" class="" required="required" /> </div> </div>
 
- <div class="form-group"> <label class="control-label col-lg-3 required"> 
+</label> <div class="col-lg-9"> <input type="text" name="secretKey" id="secretKey" value="{$secretKey|escape:'htmlall':'UTF-8'}" class="" required="required" /> </div> </div> <div class="form-group"> <label class="control-label col-lg-3 required"> 
+
+
 {l s='Country' mod='mercadolibre2prestashop'}
  </label> <div class="col-lg-9">
 

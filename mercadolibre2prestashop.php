@@ -41,7 +41,10 @@ class Mercadolibre2prestashop extends Module
         //acerca del modulo en si
         $this->name = 'mercadolibre2prestashop';
         $this->tab = 'administration';
-        $this->version = '1.0.7';
+
+        $this->version = '1.1.3';
+
+
         $this->author = 'Marcos volpi';
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
@@ -124,21 +127,18 @@ class Mercadolibre2prestashop extends Module
         // /Sobreesctitura
 
 
-
-
         //Tab
-        /*
         $parent_tab = new Tab();
         $parent_tab->name = array();
-        foreach (Language::getLanguages(true) as $lang)
-            $parent_tab->name[1] = $this->l('example');
+            $parent_tab->name[1] = $this->l('Import from Mercado Libre');
 
-        $parent_tab->class_name = 'AdminMlImport';
+        $parent_tab->class_name = 'AdminMlGenerateCsv';
         $parent_tab->id_parent = 0;
         $parent_tab->module = $this->name;
         $parent_tab->add();
-        */
         // /Tab
+
+
 
         return parent::install() &&
                     $this->registerHook('displayAdminListAfter');
@@ -151,6 +151,12 @@ class Mercadolibre2prestashop extends Module
         }
 
         unlink(_PS_ROOT_DIR_ . "/override/controllers/admin/AdminProductsController.php");
+
+        $idTab = Tab::getIdFromClassName('AdminMlGenerateCsv');
+        $tab = new Tab($idTab);
+        $tab->delete();
+
+        
 
         return true;
     }
@@ -255,8 +261,8 @@ class Mercadolibre2prestashop extends Module
         $secretKey = trim(Configuration::get($prefijo.'_SECRETKEY'));
         $imageTypeSelected = trim(Configuration::get($prefijo.'_IMAGETYPE'));
         
-        // /Autentificación api
 
+        // /Autentificación api
         $arrPaises = array(
             "MLA" => "Argentina",
             "MLB" => "Brasil",

@@ -84,4 +84,15 @@ class Ml2Presta extends ObjectModel
         return $res[0]["id_ml_category"];
         //return $res;
     }
+
+    //Si existe el id de Mercadolibre, devuelve el ID, sino devuelve false
+    public function existsMlProduct($id_ml)
+    {
+        $query="SELECT id_ml2presta
+        FROM ". _DB_PREFIX_ . "ml2presta
+        WHERE id_ml = '" . $id_ml . "'";
+        $res=Db::getInstance()->executeS($query);
+
+        return $res[0]["id_ml2presta"];
+    }
 }
