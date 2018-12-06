@@ -234,11 +234,14 @@ class AdminProductsController extends AdminProductsControllerCore
                         );
         }
         $producCategory=Ml2presta::getCategoryByIdProduct($idProduct);
+
+        $prefijo = 'MERCADOLIBRE2PRESTASHOP';
+        $moneda = trim(Configuration::get($prefijo.'_MONEDA'));
         $item = array(
                     "title" => $prod->name[Configuration::get('PS_LANG_DEFAULT')],
                     "category_id" => $producCategory,
                     "price" => str_replace(",", "", number_Format($prod->price, 2)),
-                    "currency_id" => "ARS",
+                    "currency_id" => $moneda,
                     "available_quantity" => StockAvailable::getQuantityAvailableByProduct($idProduct),
                     "buying_mode" => "buy_it_now",
                     "listing_type_id" => "bronze",
