@@ -285,6 +285,7 @@ class Mercadolibre2prestashop extends Module
             'url_base' => "//".Tools::getHttpHost(false).__PS_BASE_URI__,
             'config_general' => $this->renderConfigForms(),
             'pais_seleccionado' => trim(Configuration::get($prefijo.'_PAIS')),
+            'moneda_seleccionada' => trim(Configuration::get($prefijo.'_MONEDA')),
             'paises' => $arrPaises,
             'appId' => $appId,
             'secretKey' => $secretKey,

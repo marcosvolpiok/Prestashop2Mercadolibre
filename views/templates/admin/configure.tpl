@@ -71,10 +71,37 @@
 
 </select>
 
+
 <p class="help-block"> 
  {l s='Select the country with which you operate with MercadoLibre' mod='mercadolibre2prestashop'} 
-</p> </div> </div> </div><!-- /.form-wrapper --> <div class="panel-footer"> <button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitLogin" class="btn btn-default pull-right"> <i class="process-icon-save"></i>  {l s='Save' mod='mercadolibre2prestashop'} </button> </div> </div> 
+</p> </div> </div> </div>
 
+
+
+
+
+
+
+
+
+
+
+ <div class="form-group"> <label class="control-label col-lg-3 required"> 
+{l s='Currencie' mod='mercadolibre2prestashop'}
+ </label> <div class="col-lg-9">
+<select name="moneda" class=" fixed-width-xl" id="moneda" required>
+	<option value="" {if !$moneda_seleccionada}selected="selected"{/if} >
+	{l s='Select your currencie' mod='mercadolibre2prestashop'}
+	</option>
+</select>
+<p class="help-block"> 
+ {l s='Select the currencie with which you operate with MercadoLibre' mod='mercadolibre2prestashop'} 
+</p> </div> </div>
+
+
+
+
+<!-- /.form-wrapper --> <div class="panel-footer"> <button type="submit" value="1" id="module_form_submit_btn" name="btnSubmitLogin" class="btn btn-default pull-right"> <i class="process-icon-save"></i>  {l s='Save' mod='mercadolibre2prestashop'} </button> </div> </div> 
 
 
 		<div class="panel">
@@ -109,3 +136,28 @@
 </div>
 
 </form>
+
+
+<script>
+	$.ajax({
+		type: 'GET',
+		url: 'https://api.mercadolibre.com/currencies',
+		success: function(data){
+			$( ".result" ).html( data );
+			//$("#moneda").append('<option value="">{l s='Select category' mod='mercadolibre2prestashop'}</option>');
+
+			data.forEach(function(entry) {
+				$("#moneda").append('<option value="'+entry.id+'">'+entry.description+'</option>');
+			}, this);	  
+
+			if('{$moneda_seleccionada}'!=''){
+				$('#moneda option[value={$moneda_seleccionada}]').attr('selected','selected');
+			}
+		},
+
+		error: function(){
+			console.log("{l s='There is a problem connecting with Mercado Libre. Please try in 15 minutes' mod='mercadolibre2prestashop'}");
+			console.log("{l s='Error connecting to Mercado Libre' mod='mercadolibre2prestashop'}");
+		}
+	});	
+</script>

@@ -102,6 +102,12 @@ class Formulario
                         ),
                         'required' => true
                 ),
+                    array(
+                            'type' => 'text',
+                            'label' =>'Moneda',
+                            'name' =>  'moneda',
+                            'required' => true
+                    ),                
         );
     }
 
