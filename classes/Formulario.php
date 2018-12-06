@@ -107,7 +107,7 @@ class Formulario
                             'label' =>'Moneda',
                             'name' =>  'moneda',
                             'required' => true
-                    ),                
+                    ),
         );
     }
 

@@ -151,7 +151,7 @@
 			}, this);	  
 
 			if('{$moneda_seleccionada}'!=''){
-				$('#moneda option[value={$moneda_seleccionada}]').attr('selected','selected');
+				$("#moneda option[value={$moneda_seleccionada|escape:'htmlall':'UTF-8'}]").attr('selected','selected');
 			}
 		},
 
