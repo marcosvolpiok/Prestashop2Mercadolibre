@@ -237,10 +237,14 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $prefijo = 'MERCADOLIBRE2PRESTASHOP';
         $moneda = trim(Configuration::get($prefijo.'_MONEDA'));
+        $precio = number_Format($prod->price, 2);
+        if ($moneda=='COP'){ //Peso colombiano va sin decimales
+            $precio = number_Format($prod->price, 0);
+        }
         $item = array(
                     "title" => $prod->name[Configuration::get('PS_LANG_DEFAULT')],
                     "category_id" => $producCategory,
-                    "price" => str_replace(",", "", number_Format($prod->price, 2)),
+                    "price" => str_replace(",", "", $precio),
                     "currency_id" => $moneda,
                     "available_quantity" => StockAvailable::getQuantityAvailableByProduct($idProduct),
                     "buying_mode" => "buy_it_now",
