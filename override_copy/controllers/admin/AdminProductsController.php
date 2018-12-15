@@ -254,7 +254,7 @@ class AdminProductsController extends AdminProductsControllerCore
                         array(
                             "plain_text" => strip_tags($prod->description[Configuration::get('PS_LANG_DEFAULT')])
                         ),
-                    "warranty" => "12 month",
+                    //"warranty" => "12 month",
                     "pictures" => $arrImageUrl
                 );
                 
