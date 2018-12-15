@@ -193,6 +193,7 @@ class AdminProductsController extends AdminProductsControllerCore
     public function createItemArray($idProduct)
     {
         $prod = new Product((int) $idProduct);
+
         $image = Image::getImages(Configuration::get('PS_LANG_DEFAULT'), $idProduct);
         $arrImageUrl= array();
         $i=0;
@@ -237,9 +238,9 @@ class AdminProductsController extends AdminProductsControllerCore
 
         $prefijo = 'MERCADOLIBRE2PRESTASHOP';
         $moneda = trim(Configuration::get($prefijo.'_MONEDA'));
-        $precio = number_Format($prod->price, 2);
+        $precio = number_Format(product::getPriceStatic($idProduct), 2);
         if ($moneda=='COP'){ //Peso colombiano va sin decimales
-            $precio = number_Format($prod->price, 0);
+            $precio = number_Format(product::getPriceStatic($idProduct), 0);
         }
         $item = array(
                     "title" => $prod->name[Configuration::get('PS_LANG_DEFAULT')],
@@ -252,7 +253,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     "condition" => "new",
                     "description" =>
                         array(
-                            "plain_text" => strip_tags($prod->description[Configuration::get('PS_LANG_DEFAULT')])
+                            "plain_text" => strip_tags($prod->description[Configuration::get('PS_LANG_DEFAULT')]) . "\nReferencia: " . $prod->reference
                         ),
                     //"warranty" => "12 month",
                     "pictures" => $arrImageUrl
